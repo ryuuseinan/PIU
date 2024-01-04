@@ -9,5 +9,7 @@ public partial class Escuela
 
     public string? Nombre { get; set; }
 
+    public bool? Activo { get; set; }
+
     public virtual ICollection<Carrera> Carreras { get; set; } = new List<Carrera>();
 }

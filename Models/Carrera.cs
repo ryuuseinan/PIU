@@ -11,6 +11,8 @@ public partial class Carrera
 
     public int? EscuelaId { get; set; }
 
+    public bool? Activo { get; set; }
+
     public virtual ICollection<AsignaturaCarrera> AsignaturaCarreras { get; set; } = new List<AsignaturaCarrera>();
 
     public virtual ICollection<Asignatura> Asignaturas { get; set; } = new List<Asignatura>();

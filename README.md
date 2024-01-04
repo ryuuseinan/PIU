@@ -8,3 +8,7 @@ Luego se debe ejecutar el script en Python db.py para la creación de tablas, la
 `
 Scaffold-DbContext "SERVER=localhost,1433;DATABASE=piu;UID=sa;PWD=SQL#1234;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 `
+# Actualizar Scaffold
+`
+Scaffold-DbContext "SERVER=localhost,1433;DATABASE=piu;UID=sa;PWD=SQL#1234;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+`

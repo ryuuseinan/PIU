@@ -19,5 +19,7 @@ public partial class Docente
 
     public string? Celular { get; set; }
 
+    public bool? Activo { get; set; }
+
     public virtual ICollection<Asignatura> Asignaturas { get; set; } = new List<Asignatura>();
 }

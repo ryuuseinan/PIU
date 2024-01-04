@@ -7,7 +7,9 @@ public partial class Rol
 {
     public int Id { get; set; }
 
-    public string? NombreRol { get; set; }
+    public string? Nombre { get; set; }
+
+    public bool? Activo { get; set; }
 
     public virtual ICollection<Funcionalidad> Funcionalidads { get; set; } = new List<Funcionalidad>();
 }

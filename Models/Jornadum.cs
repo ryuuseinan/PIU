@@ -9,5 +9,7 @@ public partial class Jornadum
 
     public string? Nombre { get; set; }
 
+    public bool? Activo { get; set; }
+
     public virtual ICollection<Estudiante> Estudiantes { get; set; } = new List<Estudiante>();
 }

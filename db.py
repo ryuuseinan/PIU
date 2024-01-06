@@ -54,9 +54,9 @@ class FuncionalidadRol(Base):
 class Usuario(Base):
     __tablename__ = 'usuario'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(30), unique=True, nullable=False)
-    correo = Column(String(30), unique=True, nullable=False)
-    contrasena = Column(String(255), nullable=False)
+    nombre = Column(String(30), unique=True)
+    correo = Column(String(30), unique=True)
+    contrasena = Column(String(255))
     rol_id = Column(Integer, ForeignKey('rol.id'))
     activo = Column(Boolean, default=True)
 
@@ -217,6 +217,20 @@ for nombre_jornada in jornada_nombres:
         print(f"Jornada '{nombre_jornada}' agregado.")
     else:
         print(f"Jornada '{nombre_jornada}' ya existe.")
+
+# Función para agregar un rol si no existe
+rol_nombres = ['Administrador', 'Gestor', 'Lector']
+
+for nombre_rol in rol_nombres:
+    rol_existente = session.query(Rol).filter_by(nombre=nombre_rol).first()
+
+    if not rol_existente:
+        nueva_rol = Rol(nombre=nombre_rol)
+        session.add(nueva_rol)
+        session.commit()
+        print(f"rol '{nombre_rol}' agregado.")
+    else:
+        print(f"rol '{nombre_rol}' ya existe.")
 
 # Datos de escuelas y carreras
 escuelas_carreras = {

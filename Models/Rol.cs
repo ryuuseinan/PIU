@@ -11,5 +11,7 @@ public partial class Rol
 
     public bool? Activo { get; set; }
 
+    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+
     public virtual ICollection<Funcionalidad> Funcionalidads { get; set; } = new List<Funcionalidad>();
 }

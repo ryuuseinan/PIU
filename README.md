@@ -25,8 +25,10 @@ docker ps -a
 ## Configuración de la Base de Datos PIU
 1. **Crear base de datos "piu"**
 
-Después de iniciar el contenedor, conecta tu herramienta de administración de SQL Server (por ejemplo, SQL Server Management Studio) y crea una nueva base de datos llamada "piu".
-
+Después de iniciar el contenedor, conecta tu herramienta de administración de SQL Server (por ejemplo, SQL Server Management Studio) crea una nueva base de datos llamada "piu".
+```
+create database piu;
+```
 2. **Ejecutar script Python para crear tablas y datos iniciales**
 
 

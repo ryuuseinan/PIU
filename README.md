@@ -52,4 +52,4 @@ Si la estructura de la base de datos cambia y necesitas actualizar las clases de
 Scaffold-DbContext "SERVER=localhost,1433;DATABASE=piu;UID=sa;PWD=SQL#1234;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
 ```
 
-Con estos pasos, has instalado SQL Server utilizando Docker y configurado la base de datos "piu" con el usuario "sa" y la contraseña "SQL#1234". Puedes ajustar la configuración según tus necesidades.
+El último paso es configurar la cadena de conexión y colocarla en appsettings.json

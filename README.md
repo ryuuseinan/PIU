@@ -8,11 +8,11 @@
 ```
 docker pull mcr.microsoft.com/mssql/server
 ```
-Una vez descargada la imagen, ejecuta el siguiente comando para iniciar un contenedor de SQL Server. Asegúrate de configurar la contraseña para el usuario "sa".
+2. **Una vez descargada la imagen, ejecuta el siguiente comando para iniciar un contenedor de SQL Server. Asegúrate de configurar la contraseña para el usuario "sa".**
 ```
 docker run --name "sqlserver-local" -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=SQL#1234" -p 1433:1433 -d mcr.microsoft.com/mssql/server
 ```
-Verificar la instalación:
+3. **Verificar la instalación:**
 Puedes verificar que el contenedor está en ejecución usando el siguiente comando:
 ```
 docker ps -a

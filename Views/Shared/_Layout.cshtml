@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flaticon@1.0.0/css/flaticon.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PIU.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="https://www.uvm.cl/favicon.ico">
 </head>
 <body>
+    @{
+        //var userName = HttpContext.Session.GetString("UserName");
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -48,7 +52,15 @@
 
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Ingresar</a>
+                            @if (!string.IsNullOrEmpty(userName))
+                            {
+                                <p>Bienvenido, @userName</p>
+                                <!-- Otro contenido que se mostrará si hay una sesión activa -->
+                            }
+                            else
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Ingresar</a>
+                            }
                         </li>
                     </ul>
 

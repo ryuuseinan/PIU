@@ -11,6 +11,8 @@ builder.Services.AddDbContext<PiuContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("PiuContext"));
 });
 
+builder.Services.AddSession(); // Agrega soporte para sesiones.
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,14 +28,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession(); // Agrega soporte para sesiones.
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-var cultureInfo = new CultureInfo("es-CL");
-CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 app.Run();

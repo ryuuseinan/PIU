@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PIU.Models;
 using System.Diagnostics;
-
 namespace PIU.Controllers
 {
     public class HomeController : Controller
@@ -15,6 +14,10 @@ namespace PIU.Controllers
 
         public IActionResult Index()
         {
+            var userName = HttpContext.Session.GetString("UserName");
+            var userRole = HttpContext.Session.GetString("UserRol");
+            ViewData["UserName"] = userName;
+            ViewData["UserRole"] = userRole;
             return View();
         }
 

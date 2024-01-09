@@ -57,6 +57,7 @@ class Usuario(Base):
     nombre = Column(String(30), unique=True)
     correo = Column(String(30), unique=True)
     contrasena = Column(String(255))
+    salt = Column(String(255))
     rol_id = Column(Integer, ForeignKey('rol.id'))
     activo = Column(Boolean, default=True)
 

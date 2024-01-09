@@ -7,11 +7,13 @@ public partial class Usuario
 {
     public int Id { get; set; }
 
-    public string Nombre { get; set; } = null!;
+    public string? Nombre { get; set; }
 
-    public string Correo { get; set; } = null!;
+    public string? Correo { get; set; }
 
-    public string Contrasena { get; set; } = null!;
+    public string? Contrasena { get; set; }
+
+    public string? Salt { get; set; }
 
     public int? RolId { get; set; }
 

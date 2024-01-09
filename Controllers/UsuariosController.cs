@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -52,6 +53,21 @@ namespace PIU.Controllers
             ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Id");
             return View();
         }
+        public static class PasswordHelper
+        {
+            private const int SaltSize = 32;
+            private const int Iterations = 10000;
+
+            public static (string Hash, string Salt) HashPassword(string password)
+            {
+                using (var deriveBytes = new Rfc2898DeriveBytes(password, SaltSize, Iterations))
+                {
+                    byte[] salt = deriveBytes.Salt;
+                    string hash = Convert.ToBase64String(deriveBytes.GetBytes(32));
+                    return (hash, Convert.ToBase64String(salt));
+                }
+            }
+        }
 
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -62,14 +78,21 @@ namespace PIU.Controllers
         {
             if (ModelState.IsValid)
             {
+                var (hashedPassword, salt) = PasswordHelper.HashPassword(usuario.Contrasena);
+
+                usuario.Contrasena = hashedPassword;
+                usuario.Salt = salt;
                 usuario.Activo = true;
+
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Id", usuario.RolId);
             return View(usuario);
         }
+
 
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)

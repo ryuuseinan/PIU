@@ -50,8 +50,12 @@ label {
     text-align: center;
     width: 100%;
 }
-.head{
-    background-color: #101820;
+.head-login {
+    width: 75%;
+    padding-left: 120px;
+    padding-top: 25px;
+    position: fixed;
+    top: 0;
     color: #fff;
 }
 .header {

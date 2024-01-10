@@ -49,36 +49,31 @@
                     </ul>
 
                     <ul class="navbar-nav ml-auto">
-                        
                         <li class="nav-item">
                             @if (!string.IsNullOrEmpty(ViewData["UserName"] as string))
                             {
-                                <li>
-                                    <a class="nav-link text-dark">
-                                        <span>
-                                            Bienvenido, @ViewData["UserName"] (@ViewData["UserRole"])
-                                        </span>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Bienvenido, @ViewData["UserName"] (@ViewData["UserRol"])
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa fa-user"></i>
+                                        Perfil
                                     </a>
-                                </li>
-                                <li>
-                                    <a id="logout" class="nav-link text-dark" asp-area="" asp-controller="Logout" asp-action="Logout">
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Logout" asp-action="Logout">
                                         <span style="color: red;">
-                                        <i class="fa fa-sign-out"></i>
+                                            <i class="fa fa-sign-out"></i>
                                             Cerrar sesión
                                         </span>
                                     </a>
-                                </li>
+                                </div>
+                            </li>
                             }
                             else
                             {
-                               <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">
-                                        <span>
-                                            <i class="fa fa-sign-in"></i>
-                                            Ingresar
-                                        </span>
-                                    </a>
-                               </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Ingresar</a>
                             }
                         </li>
                     </ul>

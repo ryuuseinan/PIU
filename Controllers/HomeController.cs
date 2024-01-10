@@ -15,9 +15,9 @@ namespace PIU.Controllers
         public IActionResult Index()
         {
             var userName = HttpContext.Session.GetString("UserName");
-            var userRole = HttpContext.Session.GetString("UserRol");
+            var userRol = HttpContext.Session.GetString("UserRol");
             ViewData["UserName"] = userName;
-            ViewData["UserRole"] = userRole;
+            ViewData["UserRol"] = userRol;
             return View();
         }
 

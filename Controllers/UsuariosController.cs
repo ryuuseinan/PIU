@@ -23,7 +23,7 @@ namespace PIU.Controllers
         public async Task<IActionResult> Index()
         {
             var piuContext = _context.Usuarios
-                .Where(u => u.Activo == true)
+                //.Where(u => u.Activo == true)
                 .Include(u => u.Rol);
             return View(await piuContext.ToListAsync());
         }
@@ -50,7 +50,7 @@ namespace PIU.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Id");
+            ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Nombre");
             return View();
         }
         public static class PasswordHelper
@@ -79,14 +79,18 @@ namespace PIU.Controllers
             if (ModelState.IsValid)
             {
                 var (hashedPassword, salt) = PasswordHelper.HashPassword(usuario.Contrasena);
-
+                usuario.Correo += Request.Form["dominioSelector"];
                 usuario.Contrasena = hashedPassword;
                 usuario.Salt = salt;
                 usuario.Activo = true;
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
+
+                return RedirectToAction("Create", "Personas");
+
             }
 
             ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Id", usuario.RolId);

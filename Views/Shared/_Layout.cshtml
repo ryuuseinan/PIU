@@ -57,7 +57,7 @@
                                     Bienvenido, @ViewData["UserName"] (@ViewData["UserRol"])
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Perfil" asp-action="Index" asp-route="@ViewData["UserId"]">
                                         <i class="fa fa-user"></i>
                                         Perfil
                                     </a>

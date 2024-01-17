@@ -1,6 +1,9 @@
 using PIU.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,13 @@ builder.Services.AddDbContext<PiuContext>(options => {
 });
 
 builder.Services.AddSession(); // Agrega soporte para sesiones.
+
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        //options.LoginPath = "/Sesion/Ingresar";
+        //options.AccessDeniedPath = "/Sesion/Ingresar";
+    });
 
 var app = builder.Build();
 

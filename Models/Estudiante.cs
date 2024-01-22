@@ -33,15 +33,11 @@ public partial class Estudiante
 
     public int? GeneroId { get; set; }
 
-    public int? AsignaturaId { get; set; }
-
     public string? Foto { get; set; }
 
     public bool? Activo { get; set; }
 
     public virtual ICollection<AgendaSesion> AgendaSesions { get; set; } = new List<AgendaSesion>();
-
-    public virtual Asignatura? Asignatura { get; set; }
 
     public virtual Campus? Campus { get; set; }
 

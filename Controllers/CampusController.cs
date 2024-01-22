@@ -9,94 +9,88 @@ using PIU.Models;
 
 namespace PIU.Controllers
 {
-    public class CarrerasController : Controller
+    public class CampusController : Controller
     {
         private readonly PiuContext _context;
 
-        public CarrerasController(PiuContext context)
+        public CampusController(PiuContext context)
         {
             _context = context;
         }
 
-        // GET: Carreras
+        // GET: Campus
         public async Task<IActionResult> Index()
         {
-            var piuContext = _context.Carreras
-                .Where(c => c.Activo == true)
-                .Include(c => c.Escuela);
-            return View(await piuContext.ToListAsync());
+              return _context.Campuses != null ? 
+                          View(await _context.Campuses.ToListAsync()) :
+                          Problem("Entity set 'PiuContext.Campuses'  is null.");
         }
 
-        // GET: Carreras/Details/5
+        // GET: Campus/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Carreras == null)
+            if (id == null || _context.Campuses == null)
             {
                 return NotFound();
             }
 
-            var carrera = await _context.Carreras
-                .Include(c => c.Escuela)
-                .Include(c => c.DocenteCarreras)
-                    .ThenInclude(dce => dce.Docente)
+            var campus = await _context.Campuses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carrera == null)
+            if (campus == null)
             {
                 return NotFound();
             }
 
-            return View(carrera);
+            return View(campus);
         }
 
-        // GET: Carreras/Create
+        // GET: Campus/Create
         public IActionResult Create()
         {
-            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Id");
             return View();
         }
 
-        // POST: Carreras/Create
+        // POST: Campus/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,EscuelaId,Activo")] Carrera carrera)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Activo")] Campus campus)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carrera);
+                _context.Add(campus);
+                campus.Activo = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Id", carrera.EscuelaId);
-            return View(carrera);
+            return View(campus);
         }
 
-        // GET: Carreras/Edit/5
+        // GET: Campus/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Carreras == null)
+            if (id == null || _context.Campuses == null)
             {
                 return NotFound();
             }
 
-            var carrera = await _context.Carreras.FindAsync(id);
-            if (carrera == null)
+            var campus = await _context.Campuses.FindAsync(id);
+            if (campus == null)
             {
                 return NotFound();
             }
-            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Id", carrera.EscuelaId);
-            return View(carrera);
+            return View(campus);
         }
 
-        // POST: Carreras/Edit/5
+        // POST: Campus/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,EscuelaId,Activo")] Carrera carrera)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Activo")] Campus campus)
         {
-            if (id != carrera.Id)
+            if (id != campus.Id)
             {
                 return NotFound();
             }
@@ -105,12 +99,12 @@ namespace PIU.Controllers
             {
                 try
                 {
-                    _context.Update(carrera);
+                    _context.Update(campus);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarreraExists(carrera.Id))
+                    if (!CampusExists(campus.Id))
                     {
                         return NotFound();
                     }
@@ -121,56 +115,50 @@ namespace PIU.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Id", carrera.EscuelaId);
-            return View(carrera);
+            return View(campus);
         }
 
-        // GET: Carreras/Delete/5
+        // GET: Campus/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Carreras == null)
+            if (id == null || _context.Campuses == null)
             {
                 return NotFound();
             }
 
-            var carrera = await _context.Carreras
-                .Include(c => c.Escuela)
+            var campus = await _context.Campuses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carrera == null)
+            if (campus == null)
             {
                 return NotFound();
             }
 
-            return View(carrera);
+            return View(campus);
         }
 
-        // POST: Carreras/Delete/5
+        // POST: Campus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Carreras == null)
+            if (_context.Campuses == null)
             {
-                return Problem("Entity set 'PiuContext.Carreras' is null.");
+                return Problem("Entity set 'PiuContext.Campuses'  is null.");
             }
-
-            var carrera = await _context.Carreras.FindAsync(id);
-
-            if (carrera != null)
+            var campus = await _context.Campuses.FindAsync(id);
+            if (campus != null)
             {
-                // En lugar de eliminar, actualiza el valor de 'Activo' a False
-                carrera.Activo = false;
-                _context.Carreras.Update(carrera);
+                campus.Activo = false;
+                _context.Campuses.Update(campus);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-
-        private bool CarreraExists(int id)
+        private bool CampusExists(int id)
         {
-          return (_context.Carreras?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Campuses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

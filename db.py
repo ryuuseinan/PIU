@@ -92,14 +92,6 @@ class Carrera(Base):
     escuela_id = Column(Integer, ForeignKey('escuela.id'))
     activo = Column(Boolean, default=True)
 
-class Asignatura(Base):
-    __tablename__ = 'asignatura'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(length=30))
-    carrera_id = Column(Integer, ForeignKey('carrera.id'))
-    docente_id = Column(Integer, ForeignKey('docente.id'))
-    activo = Column(Boolean, default=True)
-
 class Docente(Base):
     __tablename__ = 'docente'
     id = Column(Integer, primary_key=True)
@@ -111,11 +103,12 @@ class Docente(Base):
     celular = Column(String(length=15))
     activo = Column(Boolean, default=True)
 
-class AsignaturaCarrera(Base):
-    __tablename__ = 'asignatura_carrera'
-    id = Column(Integer, primary_key=True)
-    carrera_id = Column(Integer, ForeignKey('carrera.id'))
-    asignatura_id = Column(Integer, ForeignKey('asignatura.id'))
+class DocenteCarrera(Base):
+	__tablename__ = 'docente_carrera'
+	id = Column(Integer, primary_key=True)
+	docente_id = Column(Integer, ForeignKey('docente.id'))
+	carrera_id = Column(Integer, ForeignKey('carrera.id'))
+	activo = Column(Boolean, default=True)
 
 class Jornada(Base):
     __tablename__ = 'jornada'
@@ -145,7 +138,7 @@ class Estudiante(Base):
     campus_id = Column(Integer, ForeignKey('campus.id'))
     jornada_id = Column(Integer, ForeignKey('jornada.id'))
     genero_id = Column(Integer, ForeignKey('genero.id'))
-    asignatura_id = Column(Integer, ForeignKey('asignatura.id'))
+    #asignatura_id = Column(Integer, ForeignKey('asignatura.id'))
     foto = Column(String(length=255))
     activo = Column(Boolean, default=True)
 
@@ -317,6 +310,249 @@ for nombre_escuela, carreras in escuelas_carreras.items():
             print(f"Carrera '{nombre_carrera}' agregada.")
         else:
             print(f"Carrera '{nombre_carrera}' ya existe.")
+
+# Crear instancias de Docente
+docentes_data = [
+    {"nombre": "Claudio", "apellido_paterno": "Burgos", "apellido_materno": "Zamora"},
+    {"nombre": "Claudio", "apellido_paterno": "Sánchez", "apellido_materno": "Toledo"},
+    {"nombre": "Cristóbal", "apellido_paterno": "Tapia", "apellido_materno": "Almonacid"},
+    {"nombre": "Drago", "apellido_paterno": "Radovic", "apellido_materno": "López"},
+    {"nombre": "Felipe", "apellido_paterno": "Gómez", "apellido_materno": "Fernández"},
+    {"nombre": "Hernando", "apellido_paterno": "González", "apellido_materno": "Muñoz"},
+    {"nombre": "Luis", "apellido_paterno": "Baeza", "apellido_materno": "Salvo"},
+    {"nombre": "Óscar", "apellido_paterno": "Soto", "apellido_materno": "Díaz"},
+    {"nombre": "Rodolfo", "apellido_paterno": "Olguín", "apellido_materno": "Castillo"},
+    {"nombre": "Rosa", "apellido_paterno": "Rodríguez", "apellido_materno": "Valenzuela"},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de contador auditor
+for docente_info in docentes_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+
+        # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de contador auditor
+    carrera_contador_auditor = session.query(Carrera).filter_by(nombre='Contador Auditor').first()
+    if carrera_contador_auditor:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_contador_auditor.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Contador Auditor.")
+    else:
+        print("Error: Carrera de Contador Auditor no encontrada.")
+
+# Crear instancias de Docente para Ingeniería Civil en Minas
+docentes_ingenieria_minas_data = [
+    {"nombre": "Adolfo", "apellido_paterno": "Balboa", "apellido_materno": "Monroy"},
+    {"nombre": "Alejandro", "apellido_paterno": "Álvarez", "apellido_materno": "Toro"},
+    {"nombre": "César", "apellido_paterno": "Olmos", "apellido_materno": "Maturana"},
+    {"nombre": "Claudio", "apellido_paterno": "Corvalán", "apellido_materno": "Robert"},
+    {"nombre": "Daniela", "apellido_paterno": "González", "apellido_materno": ""},
+    {"nombre": "Guillermo", "apellido_paterno": "Olivares", "apellido_materno": "Quintanilla"},
+    {"nombre": "Guillermo", "apellido_paterno": "Uribe", "apellido_materno": "Pérez"},
+    {"nombre": "Luis", "apellido_paterno": "Chirino", "apellido_materno": "Gálvez"},
+    {"nombre": "Luis", "apellido_paterno": "Lagno", "apellido_materno": "Bravo"},
+    {"nombre": "Macarena", "apellido_paterno": "Ruiz", "apellido_materno": "Ugalde"},
+    {"nombre": "Moisés", "apellido_paterno": "Álvarez", "apellido_materno": "Becerra"},
+    {"nombre": "Sergio", "apellido_paterno": "Navarrete", "apellido_materno": "Letelier"},
+    {"nombre": "Teresa", "apellido_paterno": "Cautivo", "apellido_materno": "Serrano"},
+    {"nombre": "Yeimy", "apellido_paterno": "Vivar", "apellido_materno": "Lobos"},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de Ingeniería Civil en Minas
+for docente_info in docentes_ingenieria_minas_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+
+        # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de Ingeniería Civil en Minas
+    carrera_ingenieria_minas = session.query(Carrera).filter_by(nombre='Ingeniería Civil en Minas').first()
+    if carrera_ingenieria_minas:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_ingenieria_minas.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Ingeniería Civil en Minas.")
+    else:
+        print("Error: Carrera de Ingeniería Civil en Minas no encontrada.")
+
+# Crear instancias de Docente para Ingeniería Civil Industrial
+docentes_ingenieria_industrial_data = [
+    {"nombre": "David", "apellido_paterno": "Larrondo", "apellido_materno": "Narbona"},
+    {"nombre": "Drago", "apellido_paterno": "Radovic", "apellido_materno": "López"},
+    {"nombre": "Eduardo", "apellido_paterno": "Jones", "apellido_materno": "Chávez"},
+    {"nombre": "Elías", "apellido_paterno": "Bracho", "apellido_materno": "Cordero"},
+    {"nombre": "Gloria", "apellido_paterno": "Elgueta", "apellido_materno": "Villegas"},
+    {"nombre": "Gloria", "apellido_paterno": "Joya", "apellido_materno": "García"},
+    {"nombre": "Iván", "apellido_paterno": "Ayala", "apellido_materno": "Ayala"},
+    {"nombre": "Jenny", "apellido_paterno": "Márquez", "apellido_materno": "Astorga"},
+    {"nombre": "Katherine", "apellido_paterno": "López", "apellido_materno": "Arias"},
+    {"nombre": "Nerio", "apellido_paterno": "Villasmil", "apellido_materno": "Pirela"},
+    {"nombre": "Rodrigo", "apellido_paterno": "Martínez", "apellido_materno": "Campos"},
+    {"nombre": "Rodrigo", "apellido_paterno": "Silva", "apellido_materno": "Haun"},
+    {"nombre": "Víctor", "apellido_paterno": "López", "apellido_materno": "Casanova"},
+    {"nombre": "Ximena", "apellido_paterno": "Petit-Breuilh", "apellido_materno": ""},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de Ingeniería Civil Industrial
+for docente_info in docentes_ingenieria_industrial_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+
+        # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de Ingeniería Civil Industrial
+    carrera_ingenieria_industrial = session.query(Carrera).filter_by(nombre='Ingeniería Civil Industrial').first()
+    if carrera_ingenieria_industrial:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_ingenieria_industrial.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Ingeniería Civil Industrial.")
+    else:
+        print("Error: Carrera de Ingeniería Civil Industrial no encontrada.")
+
+# Crear instancias de Docente para Ingeniería Civil Informática
+docentes_ingenieria_informatica_data = [
+    {"nombre": "Alejandro", "apellido_paterno": "Pares", "apellido_materno": "Villarroel"},
+    {"nombre": "Claudia", "apellido_paterno": "Jiménez", "apellido_materno": "Quintana"},
+    {"nombre": "David", "apellido_paterno": "Larrondo", "apellido_materno": "Narbona"},
+    {"nombre": "Eduardo", "apellido_paterno": "Jones", "apellido_materno": "Chávez"},
+    {"nombre": "Gonzalo", "apellido_paterno": "Cifuentes", "apellido_materno": "Neira"},
+    {"nombre": "Graciela", "apellido_paterno": "Mardones", "apellido_materno": "Vera"},
+    {"nombre": "José", "apellido_paterno": "Ruiz", "apellido_materno": "Cornejo"},
+    {"nombre": "Lorena", "apellido_paterno": "Pérez", "apellido_materno": "Villegas"},
+    {"nombre": "Manuel", "apellido_paterno": "García", "apellido_materno": "Hernández"},
+    {"nombre": "Pablo", "apellido_paterno": "Ormeño", "apellido_materno": "Arriagada"},
+    {"nombre": "Roberto", "apellido_paterno": "Loayza", "apellido_materno": "Alegría"},
+    {"nombre": "Sergio", "apellido_paterno": "Fuentes", "apellido_materno": "León"},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de Ingeniería Civil Informática
+for docente_info in docentes_ingenieria_informatica_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+
+        # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de Ingeniería Civil Informática
+    carrera_ingenieria_informatica = session.query(Carrera).filter_by(nombre='Ingeniería Civil Informática').first()
+    if carrera_ingenieria_informatica:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_ingenieria_informatica.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Ingeniería Civil Informática.")
+    else:
+        print("Error: Carrera de Ingeniería Civil Informática no encontrada.")
+
+# Crear instancias de Docente para Ingeniería Comercial
+docentes_ingenieria_comercial_data = [
+    {"nombre": "Betsabe", "apellido_paterno": "Arellano", "apellido_materno": "Araya"},
+    {"nombre": "Drago", "apellido_paterno": "Radovic", "apellido_materno": "López"},
+    {"nombre": "Eric", "apellido_paterno": "Salinas", "apellido_materno": "Mayne"},
+    {"nombre": "Galo", "apellido_paterno": "Herrera", "apellido_materno": "Baquedano"},
+    {"nombre": "Gerardo", "apellido_paterno": "Castillejo", "apellido_materno": ""},
+    {"nombre": "Hernando", "apellido_paterno": "González", "apellido_materno": "Muñoz"},
+    {"nombre": "Katherine", "apellido_paterno": "López", "apellido_materno": "Arias"},
+    {"nombre": "Marcelo", "apellido_paterno": "León", "apellido_materno": "Vargas"},
+    {"nombre": "Michael", "apellido_paterno": "Ulriksen", "apellido_materno": "Gutiérrez"},
+    {"nombre": "Óscar", "apellido_paterno": "Soto", "apellido_materno": "Díaz"},
+    {"nombre": "Roberto", "apellido_paterno": "Paiva", "apellido_materno": ""},
+    {"nombre": "Rodolfo", "apellido_paterno": "Olguín", "apellido_materno": "Castillo"},
+    {"nombre": "Rosa", "apellido_paterno": "Rodríguez", "apellido_materno": "Valenzuela"},
+    {"nombre": "Tania", "apellido_paterno": "Zumaeta", "apellido_materno": "Quiroz"},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de Ingeniería Comercial
+for docente_info in docentes_ingenieria_comercial_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+
+    # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de Ingeniería Comercial
+    carrera_ingenieria_comercial = session.query(Carrera).filter_by(nombre='Ingeniería Comercial').first()
+    if carrera_ingenieria_comercial:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_ingenieria_comercial.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Ingeniería Comercial.")
+    else:
+        print("Error: Carrera de Ingeniería Comercial no encontrada.")
+
+# Crear instancias de Docente para Ingeniería en Construcción
+docentes_ingenieria_construccion_data = [
+    {"nombre": "Adolfo", "apellido_paterno": "Balboa", "apellido_materno": "Monroy"},
+    {"nombre": "Antonio", "apellido_paterno": "Maltrana", "apellido_materno": "Fuenzalida"},
+    {"nombre": "Billy", "apellido_paterno": "Vílchez", "apellido_materno": "Branez"},
+    {"nombre": "Edison", "apellido_paterno": "Paz", "apellido_materno": "Aguirre"},
+    {"nombre": "Erick", "apellido_paterno": "Reiser", "apellido_materno": "Sgombich"},
+    {"nombre": "Esteban", "apellido_paterno": "González", "apellido_materno": "Rauter"},
+    {"nombre": "Gerardo", "apellido_paterno": "Soto", "apellido_materno": "Díaz"},
+    {"nombre": "Guillermo", "apellido_paterno": "Brante", "apellido_materno": "Lara"},
+    {"nombre": "Isaac", "apellido_paterno": "Flores", "apellido_materno": "Gutiérrez"},
+    {"nombre": "Javiera", "apellido_paterno": "Pérez", "apellido_materno": "Clavería"},
+    {"nombre": "Juan Carlos", "apellido_paterno": "Páez", "apellido_materno": "Olivares"},
+    {"nombre": "Livio", "apellido_paterno": "Garrido", "apellido_materno": "Carvajal"},
+    {"nombre": "Luis", "apellido_paterno": "Fredes", "apellido_materno": "Barrera"},
+    {"nombre": "Manuel", "apellido_paterno": "Muñoz", "apellido_materno": "Guzmán"},
+    {"nombre": "Marcelo", "apellido_paterno": "Meneses", "apellido_materno": "Aravena"},
+    {"nombre": "Miguel", "apellido_paterno": "Vera", "apellido_materno": "Sánchez"},
+    {"nombre": "Patricio", "apellido_paterno": "Cáceres", "apellido_materno": "Cifuentes"},
+]
+
+# Agregar instancias de Docente a la sesión y asignar la carrera de Ingeniería en Construcción
+for docente_info in docentes_ingenieria_construccion_data:
+    docente_existente = session.query(Docente).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()
+
+    if not docente_existente:
+        nuevo_docente = Docente(**docente_info)
+        session.add(nuevo_docente)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' agregado.")
+     
+    # Obtener el ID del docente recién creado
+    id_docente = session.query(Docente.id).filter_by(nombre=docente_info["nombre"], apellido_paterno=docente_info["apellido_paterno"], apellido_materno=docente_info["apellido_materno"]).first()[0]
+
+    # Asignar la carrera de Ingeniería en Construcción
+    carrera_ingenieria_construccion = session.query(Carrera).filter_by(nombre='Ingeniería en Construcción').first()
+    if carrera_ingenieria_construccion:
+        nuevo_docente_carrera = DocenteCarrera(docente_id=id_docente, carrera_id=carrera_ingenieria_construccion.id)
+        session.add(nuevo_docente_carrera)
+        session.commit()
+        print(f"Docente '{docente_info['nombre']} {docente_info['apellido_paterno']}' asignado a la carrera de Ingeniería en Construcción.")
+    else:
+        print("Error: Carrera de Ingeniería en Construcción no encontrada.")
 
 # Cierra la sesión
 session.close()

@@ -47,12 +47,18 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Gestión</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Estudiantes</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Estudiantes" asp-action="Index">Estudiantes</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Docentes" asp-action="Index">Docentes</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Reportes</a>
                             </div>
                         </li>
+                        <form class="form-inline my-2 my-lg-0" asp-controller="Estudiantes" asp-action="Listar" method="post">
+                            <div class="form-group">
+                                <input type="text" name="searchString" class="form-control" />
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </div>
+                        </form>
                     </ul>
                 </div>
                     <ul class="navbar-nav ml-auto">
@@ -108,7 +114,7 @@
             &copy; 2023 - PIU - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script> 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/fontawesome/js/all.js"></script>
     <script src="~/lib/fontawesome/js/fontawesome.min.js"></script>

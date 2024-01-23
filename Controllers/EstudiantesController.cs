@@ -25,6 +25,33 @@ namespace PIU.Controllers
             return View(await piuContext.ToListAsync());
         }
 
+        public IActionResult Listar()
+        {
+            return View();
+        }
+
+        // POST: Estudiantes/Search
+        [HttpPost]
+        public async Task<IActionResult> Listar(string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Realiza la búsqueda en el contexto de la base de datos
+            var estudiantes = await _context.Estudiantes
+                .Where(e => e.Activo == true &&
+                            (e.Rut.Contains(searchString) ||
+                             e.Nombre.Contains(searchString) ||
+                             e.ApellidoPaterno.Contains(searchString) ||
+                             e.ApellidoMaterno.Contains(searchString)))
+                .ToListAsync();
+
+            // Pasa los resultados a la vista
+            return View("Index", estudiantes);
+        }
+
         // GET: Estudiantes/Details/5
         public async Task<IActionResult> Details(int? id)
         {

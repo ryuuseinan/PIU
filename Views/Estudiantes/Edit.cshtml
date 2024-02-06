@@ -4,101 +4,158 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="card">
+    <form asp-action="Edit" method="post">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="Foto" type="hidden" />
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-1 text-left">
+                    <a asp-action="Details" asp-route-id="@Model.Id">   
+                        <i class="fas fa-arrow-left" style="height:35px;width:35px" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <h3>@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.ApellidoPaterno) @Html.DisplayFor(model => model.ApellidoMaterno)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <div id="info" disable=""></div>
+                    <div id="preview" style="height: 200px">
+                        <img src="~/@Model.Foto" class="img-circle img-responsive">
+                    </div>
+                    <br />
+                    <p>
+                        <strong>Nombre</strong><br>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Apellido Paterno</strong><br>
+                        <input asp-for="ApellidoPaterno" class="form-control" />
+                        <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Apellido Materno</strong><br>
+                        <input asp-for="ApellidoMaterno" class="form-control" />
+                        <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        <strong>RUT</strong><br>
+                        <input asp-for="Rut" class="form-control" />
+                        <span asp-validation-for="Rut" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Género</strong><br>
+                        <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+                        <span asp-validation-for="GeneroId" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Número de celular</strong><br>
+                        <input asp-for="Celular" class="form-control" />
+                        <span asp-validation-for="Celular" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Email institucional</strong><br>
+                        <input asp-for="Correo" class="form-control" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </p>
 
-<h4>Estudiante</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Rut" class="control-label"></label>
-                <input asp-for="Rut" class="form-control" />
-                <span asp-validation-for="Rut" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApellidoPaterno" class="control-label"></label>
-                <input asp-for="ApellidoPaterno" class="form-control" />
-                <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApellidoMaterno" class="control-label"></label>
-                <input asp-for="ApellidoMaterno" class="form-control" />
-                <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaNacimiento" class="control-label"></label>
-                <input asp-for="FechaNacimiento" class="form-control" />
-                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Celular" class="control-label"></label>
-                <input asp-for="Celular" class="form-control" />
-                <span asp-validation-for="Celular" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IngresoPiu" class="control-label"></label>
-                <select asp-for="IngresoPiu" class="form-control" asp-items="ViewBag.IngresoPiu"></select>
-                <span asp-validation-for="IngresoPiu" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EgresoPiu" class="control-label"></label>
-                <select asp-for="EgresoPiu" class="form-control" asp-items="ViewBag.EgresoPiu"></select>
-                <span asp-validation-for="EgresoPiu" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CarreraId" class="control-label"></label>
-                <select asp-for="CarreraId" class="form-control" asp-items="ViewBag.CarreraId"></select>
-                <span asp-validation-for="CarreraId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CampusId" class="control-label"></label>
-                <select asp-for="CampusId" class="form-control" asp-items="ViewBag.CampusId"></select>
-                <span asp-validation-for="CampusId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JornadaId" class="control-label"></label>
-                <select asp-for="JornadaId" class="form-control" asp-items="ViewBag.JornadaId"></select>
-                <span asp-validation-for="JornadaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GeneroId" class="control-label"></label>
-                <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
-                <span asp-validation-for="GeneroId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Activo" class="control-label"></label>
-                <input asp-for="Activo" class="form-control" />
-                <span asp-validation-for="Activo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+                    <p>
+                        <strong>Email personal</strong><br>
+                        <input asp-for="Correo" class="form-control" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Fecha de nacimiento</strong><br>
+                        <input asp-for="FechaNacimiento" type="date" class="form-control" />
+                        <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                    </p>
+                </div>
+                <div class="col-md-3 linea-separadora linea-separadora-derecha">
+                    <p>
+                        <strong>Fecha de ingreso</strong><br>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                        <select asp-for="IngresoPiu" class="form-control" asp-items="@(ViewData["Anios"] as SelectList)"></select>
+                        <span asp-validation-for="IngresoPiu" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Fecha de egreso</strong><br>
+                        <select asp-for="EgresoPiu" class="form-control" asp-items="@(ViewData["Anios"] as SelectList)"></select>
+                        <span asp-validation-for="EgresoPiu" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Carrera</strong><br>
+                        <select asp-for="CarreraId" class="form-control" asp-items="ViewBag.CarreraId"></select>
+                        <span asp-validation-for="CarreraId" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Campus</strong><br>
+                        <select asp-for="CampusId" class="form-control" asp-items="ViewBag.CampusId"></select>
+                        <span asp-validation-for="CampusId" class="text-danger"></span>
+                    </p>
+                    <p>
+                        <strong>Jornada</strong><br>
+                        <select asp-for="JornadaId" class="form-control" asp-items="ViewBag.JornadaId"></select>
+                        <span asp-validation-for="JornadaId" class="text-danger"></span>
+                    </p>
+                </div>
+                <div class="col-md-3 text-right">
+                    <button type="submit" value="Save" class="btn btn-secondary boton-lista">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Configurar reglas de validación personalizadas para fecha de egreso
+            $.validator.addMethod("dateGreaterThan", function (value, element, params) {
+                var ingresoPiuValue = $(params).val();
+                var egresoPiuValue = value;
+
+                if (ingresoPiuValue && egresoPiuValue) {
+                    return new Date(egresoPiuValue) >= new Date(ingresoPiuValue);
+                }
+
+                return true; // Si no hay valores, la validación pasa
+            });
+
+            $.validator.unobtrusive.adapters.add("dateGreaterThan", ["otherproperty"], function (options) {
+                options.rules["dateGreaterThan"] = "#" + options.params.otherproperty;
+                options.messages["dateGreaterThan"] = options.message;
+            });
+
+            // Agregar regla de validación a los campos de fecha
+            $("#EgresoPiu").rules("add", {
+                dateGreaterThan: "IngresoPiu",
+                messages: {
+                    dateGreaterThan: "La fecha de egreso debe ser igual o posterior a la fecha de ingreso."
+                }
+            });
+
+            // Validar al cambiar el valor del campo de fecha de ingreso
+            $("#IngresoPiu").change(function () {
+                $("#EgresoPiu").valid();
+            });
+
+            // Validar al cambiar el valor del campo de fecha de egreso
+            $("#EgresoPiu").change(function () {
+                $("#IngresoPiu").valid();
+            });
+        });
+    </script>
 }

@@ -80,12 +80,14 @@ namespace PIU.Controllers
                 return NotFound();
             }
 
-            var carrera = await _context.Carreras.FindAsync(id);
+            var carrera = await _context.Carreras
+                .Include(c => c.Escuela)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (carrera == null)
             {
                 return NotFound();
             }
-            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Id", carrera.EscuelaId);
+            ViewData["EscuelaId"] = new SelectList(_context.Escuelas, "Id", "Nombre", carrera.EscuelaId);
             return View(carrera);
         }
 

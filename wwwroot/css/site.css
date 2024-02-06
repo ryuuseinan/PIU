@@ -69,3 +69,12 @@ label {
 .card-header{
     background-color: #101820;
 }
+.img-circle {
+    border-radius: 50%;
+    height: 200px;
+    display: block; /* Asegura que la imagen sea un elemento de bloque */
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+}
+.badge {
+    font-size: 0.9em;
+}

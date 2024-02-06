@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PIU.Models;
 
@@ -22,9 +21,9 @@ public partial class Estudiante
 
     public string? Celular { get; set; }
 
-    public int? IngresoPiu { get; set; }
+    public short? IngresoPiu { get; set; }
 
-    public int? EgresoPiu { get; set; }
+    public short? EgresoPiu { get; set; }
 
     public int? CarreraId { get; set; }
 
@@ -46,11 +45,7 @@ public partial class Estudiante
 
     public virtual ICollection<Documento> Documentos { get; set; } = new List<Documento>();
 
-    public virtual Anio? EgresoPiuNavigation { get; set; }
-
     public virtual Genero? Genero { get; set; }
-
-    public virtual Anio? IngresoPiuNavigation { get; set; }
 
     public virtual Jornadum? Jornada { get; set; }
 

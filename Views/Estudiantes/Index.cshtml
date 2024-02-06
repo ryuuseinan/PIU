@@ -4,14 +4,25 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Estudiantes</h2>
+        </div>
+        <div class="col-md-4 text-right">
+            <a class="btn btn-secondary" asp-action="Create">
+                <i class="fas fa-user-plus" aria-hidden="true"></i>
+                Añadir estudiante
+            </a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Rut)
             </th>
@@ -19,101 +30,102 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApellidoPaterno)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApellidoMaterno)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaNacimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Correo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Celular)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Campus)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Carrera)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EgresoPiuNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IngresoPiuNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jornada)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaNacimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Celular)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Foto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Campus.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carrera.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EgresoPiuNavigation.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genero.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IngresoPiuNavigation.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jornada.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+@foreach (var item in Model)
+{
+            <div class="row">
+                <div class="col-md-2">
+                    @if (item.Foto != null)
+                    {
+                        <img src="~/@item.Foto" class="img-circle img-responsive" style="height:110px">
+                    }
+                    else
+                    {
+                        <img src="~/img/Estudiante/FotoPerfil/default.png" class="img-circle img-responsive" style="height:110px">
+                    }
+                </div>
+                <div class="col-md-4">
+                    @if (item.Rut != null)
+                    {
+                        <p>
+                            <strong>RUT</strong><br />
+                            @Html.DisplayFor(modelItem => item.Rut)
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>RUT</strong><br />
+                            El RUT no ha sido ingresado
+                        </p>
+                    }
+                    @if (item.Nombre != null)
+                    {
+                        <p>
+                            <strong>Nombre</strong><br />
+                            @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Nombre</strong><br />
+                            El nombre no ha sido ingresado
+                        </p>
+                    }
+                </div>
+                <div class="col-md-4">
+                    @if (item.Campus != null)
+                    {
+                        <p>
+                            <strong>Campus</strong><br />
+                            @Html.DisplayFor(modelItem => item.Campus.Nombre)
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Campus</strong><br />
+                            El campus no ha sido ingresado
+                        </p>
+                    }
+                    @if (item.Carrera != null)
+                    {
+                        <p>
+                            <strong>Carrera</strong><br />
+                            @Html.DisplayFor(modelItem => item.Carrera.Nombre)
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Carrera</strong><br />
+                            La carrera no ha sido ingresada
+                        </p>
+                    }
+                </div>
+                    <div class="col-md-1 text-right" style="display:grid;align-items: center;">
+
+                    <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-route-id="@item.Id">
+                        <i class="fas fa-eye" style="width: 20px;
+                        height: 20px;"></i>
+                    </a>
+                    <a class="btn btn-outline-danger boton-lista" asp-action="Delete" asp-route-id="@item.Id">
+                        <i class="fas fa-trash" style="width: 20px;
+                        height: 20px;"></i>
+                    </a>
+                </div>
+            </div>
+    <br />
 }
     </tbody>
 </table>

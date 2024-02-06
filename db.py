@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, ForeignKey, SmallInteger
 from sqlalchemy.orm import declarative_base, sessionmaker
 import urllib
 import pyodbc
@@ -132,20 +132,13 @@ class Estudiante(Base):
     fecha_nacimiento = Column(DateTime)
     correo = Column(String(length=50))
     celular = Column(String(length=20))
-    ingreso_piu = Column(Integer, ForeignKey('anio.id'))
-    egreso_piu = Column(Integer, ForeignKey('anio.id'))
+    ingreso_piu = Column(SmallInteger)
+    egreso_piu = Column(SmallInteger)
     carrera_id = Column(Integer, ForeignKey('carrera.id'))
     campus_id = Column(Integer, ForeignKey('campus.id'))
     jornada_id = Column(Integer, ForeignKey('jornada.id'))
     genero_id = Column(Integer, ForeignKey('genero.id'))
-    #asignatura_id = Column(Integer, ForeignKey('asignatura.id'))
     foto = Column(String(length=255))
-    activo = Column(Boolean, default=True)
-
-class Anio(Base):
-    __tablename__ = 'anio'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(Integer)
     activo = Column(Boolean, default=True)
 
 class Documento(Base):

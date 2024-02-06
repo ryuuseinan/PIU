@@ -4,105 +4,326 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 text-left">
+                <a asp-action="Index">
+                    <i class="fas fa-arrow-left" style="height:35px;width:35px" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="col-md-8">
+                <h3>@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.ApellidoPaterno) @Html.DisplayFor(model => model.ApellidoMaterno)</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <div id="info" disable=""></div>
+                <div id="preview" style="height: 200px">
+                    <img src="~/@Model.Foto" class="img-circle img-responsive">
+                </div>
+                <h6></h6>
+                <form asp-action="ActualizarImagen" asp-route-id="@Model.Id" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label for="FotoArchivo">Seleccionar imagen</label>
+                        <input id="FotoArchivo" name="FotoArchivo" type="file" class="form-control" />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cropModal">
+                        Seleccionar zona de recorte
+                    </button>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary boton-lista">
+                            <i class="fas fa-save"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-md-3">
+                @if (Model.Rut != null)
+                {
+                    <p>
+                        <strong>RUT</strong><br>
+                        @Html.DisplayFor(model => model.Rut)
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>RUT</strong><br>
+                        <span class="badge badge-danger">No está definido</span>
+                    </p>
+                }
+                @if (Model.GeneroId != null)
+                {
+                    <p>
+                        <strong>Género</strong><br>
+                        @Html.DisplayFor(model => model.Genero.Nombre)
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>Género</strong><br>
+                        <span class="badge badge-danger">No está definido</span>
+                    </p>
+                }
+                @if (Model.Celular != null)
+                {
+                    <p>
+                        <strong>Número de celular</strong><br>
+                        @Html.DisplayFor(model => model.Celular)
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>Número de celular</strong><br>
+                        <span class="badge badge-danger">No está definido</span>
+                    </p>
+                }
+                @if (Model.Correo != null)
+                {
+                    <p>
+                        <strong>Email institucional</strong><br>
+                        @Html.DisplayFor(model => model.Correo)
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>Email institucional</strong><br>
+                        <span class="badge badge-danger">No está definido</span>
+                    </p>
+                }
 
-<div>
-    <h4>Estudiante</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rut)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rut)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApellidoPaterno)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApellidoPaterno)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApellidoMaterno)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApellidoMaterno)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaNacimiento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaNacimiento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Correo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Correo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Celular)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Celular)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Foto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Activo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Activo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Campus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Campus.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Carrera)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Carrera.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EgresoPiuNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EgresoPiuNavigation.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IngresoPiuNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IngresoPiuNavigation.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Jornada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jornada.Id)
-        </dd>
-    </dl>
+                <p>
+                    <strong>Email personal</strong><br>
+                    @if (Model.Correo != null)
+                    {
+                        @Html.DisplayFor(model => model.Correo)
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definido</span>
+                    }
+                </p>
+                <p>
+                    <strong>Fecha de nacimiento</strong><br>
+                    @if (Model.FechaNacimiento != null)
+                    {
+                        <span class="badge badge-dark">@ViewBag.FechaNacimiento</span>
+                        <span class="badge badge-dark">@ViewBag.Edad años</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definida</span>
+                    }
+                </p>
+            </div>
+            <div class="col-md-3 linea-separadora linea-separadora-derecha">
+                <p>
+                    <strong>Año de ingreso</strong><br>
+                    @if (Model.EgresoPiu != null)
+                    {
+                        <span class="badge badge-dark">@Html.DisplayFor(model => model.EgresoPiu)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definida</span>
+                    }
+                </p>
+                @if (Model.EgresoPiu != null)
+                {
+                    <p>
+                        <strong>Año de egreso</strong><br>
+                        <span class="badge badge-dark">@Html.DisplayFor(model => model.EgresoPiu)</span>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>Año de egreso</strong><br>
+                        <span class="badge badge-danger">No está definida</span>
+                    </p>
+                }
+                
+                <p>
+                    <strong>Carrera</strong><br>
+                    @if (Model.CarreraId != null)
+                    {
+                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Carrera.Nombre)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definida</span>
+                    }
+                </p>
+                <p>
+                    <strong>Campus</strong><br>
+                    @if (Model.CampusId != null)
+                    {
+                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Campus.Nombre)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definida</span>
+                    }
+                </p>
+                <p>
+                    <strong>Jornada</strong><br>
+                    @if (Model.JornadaId != null)
+                    {
+                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Jornada.Nombre)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No está definida</span>
+                    }
+                </p>
+                
+            </div>
+            <div class="col-md-3 text-right">
+                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cropModalLabel">Seleccionar zona de recorte</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="image-preview-container-modal" style="height: 300px;">
+                    <img id="image-preview-modal" class="img-responsive">
+                </div>
+                <div id="cropper1"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="cropAndUpload()">Recortar y Subir</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+@section Scripts {
+    <script>
+        
+        $('#FotoArchivo').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image-preview-modal').attr('src', e.target.result);
+                $('#image-preview-modal').show();
+                $('#cropper1').croppie('bind', {
+                    url: e.target.result
+                });
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+        
+        function cropAndUpload() {
+            basic.croppie('result', 'blob').then(function (blob) {
+                var formData = new FormData();
+                formData.append('id', @Model.Id);
+                formData.append('file', blob);
+                var myAppUrlSettings =
+                {
+                    myAppRoot: '@Url.Action("ActualizarImagen", "Estudiantes")',
+                    myApiUrl: '@Model.Id'
+                }
+                var request = new XMLHttpRequest();
+                request.open('POST', myAppUrlSettings.myAppRoot, true);
+                request.send(formData);
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        var responde = JSON.parse(request.responseText);
+                        if (responde.message == "OK") {
+                            alert("Imagen subida correctamente");
+                            window.location.reload();
+                        }
+                        if (responde.message == "ERROR") {
+                            alert("Error al subir la imagen");
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        var basic = $('#cropper1').croppie({
+            viewport: { width: '100%', height: '100%' },
+            boundary: { width: '100%', height: 400 },  // Ajusta la altura según tus necesidades
+            showZoomer: true,
+            enableResize: true,
+            url: 'https://via.placeholder.com/300x300',
+            format: 'png'
+        });
+
+        $('#cropModal').on('shown.bs.modal', function () {
+            // Ajusta el tamaño del Croppie cuando se muestra el modal
+            basic.croppie('bind');
+        });
+
+
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#cropper1').croppie('bind', {
+                        url: e.target.result
+                    }).then(function () {
+                        console.log('jQuery bind complete');
+                    });
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#btnupload').on('click', function () {
+            basic.croppie('result', 'blob').then(function (blob) {
+                var formData = new FormData();
+                formData.append('id', @Model.Id);
+                formData.append('file', blob);
+                var myAppUrlSettings =
+                {
+                    myAppRoot: '@Url.Action("ActualizarImagen", "Estudiantes")',
+                    myApiUrl: '@Model.Id'
+                }
+                var request = new XMLHttpRequest();
+                request.open('POST', myAppUrlSettings.myAppRoot, true);
+                request.send(formData);
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        var responde = JSON.parse(request.responseText);
+                        if (responde.message == "OK") {
+                            alert("Imagen subida correctamente");
+                            window.location.reload();
+                        }
+                        if (responde.message == "ERROR") {
+                            alert("Error al subir la imagen");
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

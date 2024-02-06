@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageProcessor;
+using ImageProcessor.Imaging.Formats;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using PIU.Models;
 
@@ -12,27 +16,23 @@ namespace PIU.Controllers
     public class EstudiantesController : Controller
     {
         private readonly PiuContext _context;
-
-        public EstudiantesController(PiuContext context)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public EstudiantesController(PiuContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Estudiantes
         public async Task<IActionResult> Index()
         {
-            var piuContext = _context.Estudiantes.Include(e => e.Campus).Include(e => e.Carrera).Include(e => e.EgresoPiuNavigation).Include(e => e.Genero).Include(e => e.IngresoPiuNavigation).Include(e => e.Jornada);
+            var piuContext = _context.Estudiantes.Include(e => e.Campus).Include(e => e.Carrera).Include(e => e.Genero).Include(e => e.Jornada);
             return View(await piuContext.ToListAsync());
-        }
-
-        public IActionResult Listar()
-        {
-            return View();
         }
 
         // POST: Estudiantes/Search
         [HttpPost]
-        public async Task<IActionResult> Listar(string searchString)
+        public async Task<IActionResult> Index(string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
             {
@@ -41,8 +41,7 @@ namespace PIU.Controllers
 
             // Realiza la búsqueda en el contexto de la base de datos
             var estudiantes = await _context.Estudiantes
-                .Where(e => e.Activo == true &&
-                            (e.Rut.Contains(searchString) ||
+                .Where(e => (e.Rut.Contains(searchString) ||
                              e.Nombre.Contains(searchString) ||
                              e.ApellidoPaterno.Contains(searchString) ||
                              e.ApellidoMaterno.Contains(searchString)))
@@ -63,15 +62,18 @@ namespace PIU.Controllers
             var estudiante = await _context.Estudiantes
                 .Include(e => e.Campus)
                 .Include(e => e.Carrera)
-                .Include(e => e.EgresoPiuNavigation)
                 .Include(e => e.Genero)
-                .Include(e => e.IngresoPiuNavigation)
                 .Include(e => e.Jornada)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)
             {
                 return NotFound();
             }
+            string? fechaNacimiento = estudiante.FechaNacimiento?.ToShortDateString();
+            ViewData["FechaNacimiento"] = fechaNacimiento;
+
+            int edad = CalcularEdad(estudiante.FechaNacimiento ?? DateTime.MinValue);
+            ViewData["Edad"] = edad;
 
             return View(estudiante);
         }
@@ -81,9 +83,7 @@ namespace PIU.Controllers
         {
             ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Id");
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Id");
-            ViewData["EgresoPiu"] = new SelectList(_context.Anios, "Id", "Id");
             ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id");
-            ViewData["IngresoPiu"] = new SelectList(_context.Anios, "Id", "Id");
             ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Id");
             return View();
         }
@@ -93,22 +93,24 @@ namespace PIU.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rut,Nombre,ApellidoPaterno,ApellidoMaterno,FechaNacimiento,Correo,Celular,IngresoPiu,EgresoPiu,CarreraId,CampusId,JornadaId,GeneroId,Foto,Activo")] Estudiante estudiante)
+        public async Task<IActionResult> Create(Estudiante estudiante)
         {
             if (ModelState.IsValid)
             {
+                //Asigna activo al estudiante
+                estudiante.Activo = true;
                 _context.Add(estudiante);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Id", estudiante.CampusId);
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Id", estudiante.CarreraId);
-            ViewData["EgresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.EgresoPiu);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", estudiante.GeneroId);
-            ViewData["IngresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.IngresoPiu);
-            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Id", estudiante.JornadaId);
+
+            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
+            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
+            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
             return View(estudiante);
         }
+
 
         // GET: Estudiantes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -117,18 +119,24 @@ namespace PIU.Controllers
             {
                 return NotFound();
             }
-
             var estudiante = await _context.Estudiantes.FindAsync(id);
             if (estudiante == null)
             {
                 return NotFound();
             }
-            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Id", estudiante.CampusId);
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Id", estudiante.CarreraId);
-            ViewData["EgresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.EgresoPiu);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", estudiante.GeneroId);
-            ViewData["IngresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.IngresoPiu);
-            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Id", estudiante.JornadaId);
+
+            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
+            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
+
+            // Lista de años (ajústala según tus necesidades)
+            int currentYear = DateTime.Now.Year;
+            List<int> anios = Enumerable.Range(2016, currentYear - 2016 + 1).ToList();
+
+            ViewData["Anios"] = new SelectList(anios, estudiante.IngresoPiu);
+            ViewData["Anios"] = new SelectList(anios, estudiante.EgresoPiu);
+            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
+
             return View(estudiante);
         }
 
@@ -137,7 +145,7 @@ namespace PIU.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Rut,Nombre,ApellidoPaterno,ApellidoMaterno,FechaNacimiento,Correo,Celular,IngresoPiu,EgresoPiu,CarreraId,CampusId,JornadaId,GeneroId,AsignaturaId,Foto,Activo")] Estudiante estudiante)
+        public async Task<IActionResult> Edit(int id, Estudiante estudiante)
         {
             if (id != estudiante.Id)
             {
@@ -148,30 +156,27 @@ namespace PIU.Controllers
             {
                 try
                 {
+                    // Actualizar los datos en la base de datos
                     _context.Update(estudiante);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "Estudiantes", new { id = estudiante.Id });
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!EstudianteExists(estudiante.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    // Manejar errores aquí...
+                    ViewBag.Message = "Error: " + ex.Message;
+                    return View(estudiante);
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Id", estudiante.CampusId);
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Id", estudiante.CarreraId);
-            ViewData["EgresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.EgresoPiu);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", estudiante.GeneroId);
-            ViewData["IngresoPiu"] = new SelectList(_context.Anios, "Id", "Id", estudiante.IngresoPiu);
-            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Id", estudiante.JornadaId);
+
+            // Si el modelo no es válido, regresa a la vista con el modelo
+            ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
+            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
+            ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
             return View(estudiante);
         }
+
 
         // GET: Estudiantes/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -184,9 +189,7 @@ namespace PIU.Controllers
             var estudiante = await _context.Estudiantes
                 .Include(e => e.Campus)
                 .Include(e => e.Carrera)
-                .Include(e => e.EgresoPiuNavigation)
                 .Include(e => e.Genero)
-                .Include(e => e.IngresoPiuNavigation)
                 .Include(e => e.Jornada)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)
@@ -209,13 +212,94 @@ namespace PIU.Controllers
             var estudiante = await _context.Estudiantes.FindAsync(id);
             if (estudiante != null)
             {
-                _context.Estudiantes.Remove(estudiante);
+                estudiante.Activo = false;
+                _context.Estudiantes.Update(estudiante);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        // Modifica la ruta en la función ActualizarImagen
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActualizarImagen(int id, IFormFile FotoArchivo)
+        {
+            // Obtener el estudiante de la base de datos
+            var estudiante = _context.Estudiantes.Find(id);
 
+            if (estudiante == null)
+            {
+                return NotFound();
+            }
+
+            var consoleMessages = new List<string>(); // Lista para almacenar mensajes de la consola
+
+            try
+            {
+                // Lógica para manejar la carga de imágenes
+                    if (FotoArchivo != null && FotoArchivo.Length > 0)
+                    {
+                        //Imprimir nombre de imagen
+                        string fileName = FotoArchivo.FileName;
+                        string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "img", "Estudiante", "FotoPerfil");
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+                        string fileExtension = Path.GetExtension(fileName);
+                        string uniqueFileName = $"{estudiante.Id}{fileExtension}";
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            // Guardar la imagen original
+                            FotoArchivo.CopyTo(fileStream);
+                        }
+
+                        // Convertir la imagen a formato WebP
+                        /*using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            using (var imageFactory = new ImageFactory(preserveExifData: true))
+                        {
+                                imageFactory.Load(FotoArchivo.OpenReadStream())
+                                    .Format(new JpegFormat())
+                                    .Quality(100)
+                                    .Save(fileStream);
+                            }
+                        }*/
+                    estudiante.Foto = "img/Estudiante/FotoPerfil/" + uniqueFileName; // Asignar el nombre único al modelo
+                    }
+                        
+                _context.Update(estudiante);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "La imagen se ha actualizado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                // Manejar cualquier excepción relacionada con la carga de imágenes
+                // Puedes registrar errores, mostrar mensajes al usuario, etc.
+                ViewBag.Message = "Error: " + ex.Message;
+                return View(estudiante);
+            }
+            // Redireccionar al detalle del estudiante o a donde sea necesario
+            return RedirectToAction("Details", "Estudiantes", new { id = estudiante.Id });
+        }
+        public int CalcularEdad(DateTime fechaNacimiento)
+        {
+            // Obtiene la fecha actual
+            DateTime fechaActual = DateTime.Today;
+
+            // Calcula la diferencia de años
+            int edad = fechaActual.Year - fechaNacimiento.Year;
+
+            // Verifica si la fecha de cumpleaños ya ocurrió en el año actual
+            if (fechaNacimiento.Date > fechaActual.AddYears(-edad))
+            {
+                // Si no ha ocurrido, resta un año a la edad
+                edad--;
+            }
+
+            return edad;
+        }
         private bool EstudianteExists(int id)
         {
           return (_context.Estudiantes?.Any(e => e.Id == id)).GetValueOrDefault();

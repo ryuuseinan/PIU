@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
     <link rel="stylesheet" href="~/lib/fontawesome/css/fontawesome.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sombreado.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PIU.styles.css" asp-append-version="true" />
     <link rel="shortcut icon" href="https://www.uvm.cl/favicon.ico">
 </head>
@@ -53,10 +55,12 @@
                                 <a class="dropdown-item" href="#">Reportes</a>
                             </div>
                         </li>
-                        <form class="form-inline my-2 my-lg-0" asp-controller="Estudiantes" asp-action="Listar" method="post">
+                        <form class="form-inline" asp-controller="Estudiantes" asp-action="Index" method="post">
                             <div class="form-group">
-                                <input type="text" name="searchString" class="form-control" />
-                                <button type="submit" class="btn btn-primary">Buscar</button>
+                                <input type="text" name="searchString" placeholder="Ingrese RUT, nombre o apellido" class="form-control" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </form>
                     </ul>
@@ -97,18 +101,31 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @if (TempData.ContainsKey("SuccessMessage"))
-            {
-                <div class="alert alert-success">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
-            @RenderBody()
-        </main>
+    <div>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @if (TempData.ContainsKey("SuccessMessage"))
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData.ContainsKey("ErrorMessage"))
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                @if (TempData.ContainsKey("ConsoleMessages"))
+                {
+                    <div class="alert alert-info">
+                        @TempData["ConsoleMessages"]
+                    </div>
+                }
+                @RenderBody()
+            </main>
+        </div>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - PIU - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

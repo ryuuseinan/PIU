@@ -1,3 +1,4 @@
+from operator import ge
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, ForeignKey, SmallInteger
 from sqlalchemy.orm import declarative_base, sessionmaker
 import urllib
@@ -119,7 +120,7 @@ class Jornada(Base):
 class Genero(Base):
     __tablename__ = 'genero'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(length=20))
+    nombre = Column(String(length=50))
     activo = Column(Boolean, default=True)
 
 class Estudiante(Base):
@@ -130,7 +131,8 @@ class Estudiante(Base):
     apellido_paterno = Column(String(length=20))
     apellido_materno = Column(String(length=20))
     fecha_nacimiento = Column(DateTime)
-    correo = Column(String(length=50))
+    correo_institucional = Column(String(length=50))
+    correo_personal = Column(String(length=50))
     celular = Column(String(length=20))
     ingreso_piu = Column(SmallInteger)
     egreso_piu = Column(SmallInteger)
@@ -548,7 +550,6 @@ for docente_info in docentes_ingenieria_construccion_data:
         print("Error: Carrera de Ingeniería en Construcción no encontrada.")
 
 # Crear instancias de Docente para Ingeniería en Gestión de Negocios Internacionales
-# Crear instancias de Docente para Ingeniería en Gestión de Negocios Internacionales
 docentes_negocios_internacionales_data = [
     {"nombre": "David", "apellido_paterno": "Baeza", "apellido_materno": "Castro"},
     {"nombre": "Drago", "apellido_paterno": "Radovic", "apellido_materno": "López"},
@@ -630,13 +631,34 @@ for docente_info in docentes_prevencion_riesgos_data:
         
 # Crear instancias de Estudiante con datos ficticios
 estudiantes_data = [
-    {"nombre": "Juan", "apellido_paterno": "Pérez", "apellido_materno": "Gómez"},
-    {"nombre": "María", "apellido_paterno": "López", "apellido_materno": "Martínez"},
-    {"nombre": "Carlos", "apellido_paterno": "Ramírez", "apellido_materno": "Fernández"},
-    {"nombre": "Laura", "apellido_paterno": "García", "apellido_materno": "Sánchez"},
-    {"nombre": "Javier", "apellido_paterno": "Díaz", "apellido_materno": "Hernández"},
+    {"nombre": "Juan", "apellido_paterno": "Pérez", "apellido_materno": "Gómez", "foto": "img/Estudiante/FotoPerfil/1.jpg", 
+     "fecha_nacimiento": "2001-01-20 00:00:00.000", "correo_personal": "juanito.perez89@gmail.com", "rut": "20.390.281-K",
+     "celular": "+56 9 4923 2513", "ingreso_piu": "2020", "carrera_id": "1", "campus_id": "1", "jornada_id": "1"},
+    {"nombre": "Pedro", "apellido_paterno": "Martínez", "apellido_materno": "Rojas", "foto": "img/Estudiante/FotoPerfil/3.jpg",
+     "fecha_nacimiento": "2002-05-10 00:00:00.000", "correo_personal": "pedrito2002@hotmail.com", "rut": "21.456.789-3",
+     "celular": "+56 9 5432 1234", "ingreso_piu": "2021", "carrera_id": "15", "campus_id": "2", "jornada_id": "2"},
+    {"nombre": "Ana", "apellido_paterno": "Fernández", "apellido_materno": "Díaz", "foto": "img/Estudiante/FotoPerfil/4.jpg",
+     "fecha_nacimiento": "2003-09-25 00:00:00.000", "correo_personal": "anafernandez03@gmail.com", "rut": "22.987.654-1",
+     "celular": "+56 9 6789 5678", "ingreso_piu": "2019", "carrera_id": "8", "campus_id": "3", "jornada_id": "1"},
+    {"nombre": "Carlos", "apellido_paterno": "Sánchez", "apellido_materno": "Alvarez", "foto": "img/Estudiante/FotoPerfil/5.jpg",
+     "fecha_nacimiento": "2001-12-05 00:00:00.000", "correo_personal": "carlos.sanchez01@yahoo.com", "rut": "18.345.678-4",
+     "celular": "+56 9 7654 4321", "ingreso_piu": "2018", "carrera_id": "22", "campus_id": "1", "jornada_id": "2"},
+    {"nombre": "Laura", "apellido_paterno": "Ramírez", "apellido_materno": "Vargas", "foto": "img/Estudiante/FotoPerfil/6.jpg",
+     "fecha_nacimiento": "2002-07-30 00:00:00.000", "correo_personal": "laurita_vargas@hotmail.com", "rut": "23.234.567-5",
+     "celular": "+56 9 8765 4321", "ingreso_piu": "2022", "carrera_id": "35", "campus_id": "3", "jornada_id": "1"},
+    {"nombre": "José", "apellido_paterno": "López", "apellido_materno": "Santana", "foto": "img/Estudiante/FotoPerfil/7.jpg",
+     "fecha_nacimiento": "2001-02-18 00:00:00.000", "correo_personal": "jose.lopez01@gmail.com", "rut": "20.111.222-9",
+     "celular": "+56 9 9876 5432", "ingreso_piu": "2023", "carrera_id": "19", "campus_id": "2", "jornada_id": "1"},
+    {"nombre": "Carmen", "apellido_paterno": "García", "apellido_materno": "Fernández", "foto": "img/Estudiante/FotoPerfil/8.jpg",
+     "fecha_nacimiento": "2000-11-12 00:00:00.000", "correo_personal": "carmengf2000@gmail.com", "rut": "19.876.543-1",
+     "celular": "+56 9 1234 5678", "ingreso_piu": "2017", "carrera_id": "12", "campus_id": "1", "jornada_id": "2"},
+    {"nombre": "Antonio", "apellido_paterno": "Dominguez", "apellido_materno": "Pérez", "foto": "img/Estudiante/FotoPerfil/9.jpg",
+     "fecha_nacimiento": "2003-04-03 00:00:00.000", "correo_personal": "adominguez03@hotmail.com", "rut": "22.333.444-5",
+     "celular": "+56 9 2345 6789", "ingreso_piu": "2020", "carrera_id": "25", "campus_id": "2", "jornada_id": "1"},
+    {"nombre": "Isabel", "apellido_paterno": "Ortega", "apellido_materno": "Martínez", "foto": "img/Estudiante/FotoPerfil/10.jpg",
+     "fecha_nacimiento": "2002-08-28 00:00:00.000", "correo_personal": "isa.ortega02@yahoo.com", "rut": "20.000.111-K",
+     "celular": "+56 9 3456 7890", "ingreso_piu": "2016", "carrera_id": "30", "campus_id": "3", "jornada_id": "2"}
 ]
-
 # Agregar instancias de Estudiante a la sesión
 for estudiante_info in estudiantes_data:
     nuevo_estudiante = Estudiante(**estudiante_info)
@@ -644,5 +666,35 @@ for estudiante_info in estudiantes_data:
     session.commit()
     print(f"Estudiante '{estudiante_info['nombre']} {estudiante_info['apellido_paterno']}' agregado.")
 
+# Función para agregar una identidad de género si no existe
+generos = ['Masculino', 
+            'Femenino', 
+            'No binario', 
+            'Agénero',
+            'Bigénero',
+            'Pangénero',
+            'Género fluido',
+            'Trigénero',
+            'Cisgénero',
+            'Intergénero',
+            'Poligénero',
+            'Intersexual',
+            'Transgénero',
+            'Transexual',
+            'Persona de sexo no ajustado o non-conforming',
+            'Neutrois',
+            'Berdache o Dos espíritus']
+
+for genero in generos:
+    rol_existente = session.query(Genero).filter_by(nombre=genero).first()
+
+    if not rol_existente:
+        nuevo_genero = Genero(nombre=genero)
+        session.add(nuevo_genero)
+        session.commit()
+        print(f"Género '{genero}' agregado.")
+    else:
+        print(f"Género '{genero}' ya existe.")
+        
 # Cierra la sesión
 session.close()

@@ -48,19 +48,6 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-<script>
-    function formatRut(input) {
-        // Obtener el valor actual del RUT sin puntos ni guión
-        let rut = input.value.replace(/[.-]/g, '');
-
-        // Verificar si el RUT tiene al menos un dígito
-        if (rut.length > 0) {
-            // Formatear el RUT con puntos y guión
-            rut = rut.replace(/^(\d{1,2})(\d{3})(\d{3})(\w{1})$/, '$1.$2.$3-$4');
-            input.value = rut;
-        }
-    }
-</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

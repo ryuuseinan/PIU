@@ -64,7 +64,6 @@ label {
     width: 100%;
     height: 100px;
     z-index: 99;
-    background-color: #f00;
 }
 .card-header{
     background-color: #101820;
@@ -77,4 +76,10 @@ label {
 }
 .badge {
     font-size: 0.9em;
+}
+a {
+    color: white;
+}
+a:hover {
+    color: white; /* Color al hacer hover */
 }

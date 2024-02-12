@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 namespace PIU.Models;
 
 public partial class Estudiante
@@ -17,7 +17,10 @@ public partial class Estudiante
 
     public DateTime? FechaNacimiento { get; set; }
 
-    public string? Correo { get; set; }
+    public string? CorreoInstitucional { get; set; }
+
+    [EmailAddress(ErrorMessage = "El campo Email personal no es una dirección de correo electrónico válida.")]
+    public string? CorreoPersonal { get; set; }
 
     public string? Celular { get; set; }
 

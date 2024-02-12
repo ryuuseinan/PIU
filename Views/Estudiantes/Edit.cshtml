@@ -44,15 +44,16 @@
                         <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
                     </p>
                 </div>
-                <div class="col-md-3">
+                <div class="col-sm-4">
                     <p>
                         <strong>RUT</strong><br>
-                        <input asp-for="Rut" class="form-control" />
+                        <input asp-for="Rut" id="Rut" class="form-control" oninput="formatRut(this)" minlength="11" maxlength="12" />
                         <span asp-validation-for="Rut" class="text-danger"></span>
                     </p>
                     <p>
                         <strong>Género</strong><br>
-                        <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+                        <small>Si no encuentras el género, ¡puedes crearlo <a href="/Generoes/Create/">aquí</a>!</small>
+                    <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
                         <span asp-validation-for="GeneroId" class="text-danger"></span>
                     </p>
                     <p>
@@ -62,14 +63,18 @@
                     </p>
                     <p>
                         <strong>Email institucional</strong><br>
-                        <input asp-for="Correo" class="form-control" />
-                        <span asp-validation-for="Correo" class="text-danger"></span>
+                        <div class="input-group">
+                            <input asp-for="CorreoInstitucional" class="form-control" value="@Model.CorreoInstitucional?.Split('@')[0]" />
+                            <span asp-validation-for="CorreoInstitucional" class="text-danger"></span>
+                            <select class="form-control" id="dominioSelector" name="dominioSelector">
+                                <option value="@Html.Raw("@alumno.uvm.cl")">@Html.Raw("@alumno.uvm.cl")</option>
+                            </select>
+                        </div>
                     </p>
-
                     <p>
                         <strong>Email personal</strong><br>
-                        <input asp-for="Correo" class="form-control" />
-                        <span asp-validation-for="Correo" class="text-danger"></span>
+                        <input asp-for="CorreoPersonal" class="form-control" minlength="3" maxlength="30" />
+                        <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
                     </p>
                     <p>
                         <strong>Fecha de nacimiento</strong><br>
@@ -80,7 +85,6 @@
                 <div class="col-md-3 linea-separadora linea-separadora-derecha">
                     <p>
                         <strong>Fecha de ingreso</strong><br>
-
                         <select asp-for="IngresoPiu" class="form-control" asp-items="@(ViewData["Anios"] as SelectList)"></select>
                         <span asp-validation-for="IngresoPiu" class="text-danger"></span>
                     </p>
@@ -105,7 +109,7 @@
                         <span asp-validation-for="JornadaId" class="text-danger"></span>
                     </p>
                 </div>
-                <div class="col-md-3 text-right">
+                <div class="col-md-2 text-right">
                     <button type="submit" value="Save" class="btn btn-secondary boton-lista">
                         <i class="fas fa-save" aria-hidden="true"></i>
                     </button>

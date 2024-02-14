@@ -3,17 +3,26 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    a {
+        color: white;
+    }
 
-<div class="card" style="background-color:rgba(0,0,0,0.1);">
+        a:hover {
+            color: white; /* Color al hacer hover */
+        }
+</style>
+<div class="card">
     <div class="card-body">
         <div class="row">
             <div class="col-md-1 text-left">
-                <a asp-action="Index">
-                    <i class="fas fa-arrow-left" style="height:35px;width:35px" aria-hidden="true"></i>
+                <a asp-action="Index" class="btn btn-secondary boton-lista">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Volver
                 </a>
             </div>
             <div class="col-md-8">
-                <h3>Información del estudiante</h3>
+                <h3 class="titulo-card">Información del estudiante</h3>
             </div>
         </div>
     </div>
@@ -21,7 +30,7 @@
         <div class="row">
             <div class="col-md-3 text-center">
                 <div id="preview" style="height: 200px">
-                    <img src="~/@Model.Foto" class="img-circle img-responsive">
+                    <img src="~/@Model.Foto" class="img-circle-details img-responsive">
                 </div>
                 <h4 style="padding-top:10px;">@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.ApellidoPaterno) @Html.DisplayFor(model => model.ApellidoMaterno)</h4>
                 <form asp-action="ActualizarImagen" asp-route-id="@Model.Id" enctype="multipart/form-data" method="post">
@@ -37,7 +46,8 @@
                     -->
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary boton-lista">
-                            <i class="fas fa-save"></i>
+                            <i class="fas fa-upload"></i>
+                            Subir foto
                         </button>
                     </div>
                 </form>
@@ -74,7 +84,7 @@
                     {
                         <div style="display: flex; align-items: center;">
                             <span class="badge badge-dark" style="margin-right: 10px;">@Html.DisplayFor(model => model.Celular)</span>
-                            <a href="https://api.whatsapp.com/send?phone=@Model.Celular&text=¡Hola!" class="btn btn-success" target="_blank" style="height: 25px; width: 25px; display: flex; justify-content: center; align-items: center;">
+                            <a href="https://api.whatsapp.com/send?phone=@Model.Celular&text=¡Hola!" class="btn btn-success boton-wsp" target="_blank" style="height: 25px; width: 25px; display: flex; justify-content: center; align-items: center;">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         </div>
@@ -139,7 +149,6 @@
                     <i class="far fa-calendar"></i>
                     @if (Model.EgresoPiu != null)
                     {
-
                         <strong>Año de egreso</strong><br>
                         <span class="badge badge-dark">@Html.DisplayFor(model => model.EgresoPiu)</span>
                     }
@@ -190,51 +199,34 @@
             <div class="col-md-3 text-right">
                 <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
                     <i class="fas fa-edit" aria-hidden="true"></i>
+                    Editar
                 </a>
             </div>
         </div>
     </div>
 </div>
 <br />
-<div class="card" style="background-color:rgba(0,0,0,0.1);">
+<div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-md-1 text-left">
+            <div class="col-md-1 text-left"></div>
+            <div class="col-md-7">
+                <h3>Sesiones del estudiante</h3>
             </div>
-            <div class="col-md-8">
-                <h3>Diagnóstico del estudiante</h3>
+            <div class="col-md-3 text-right">
+                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-calendar" aria-hidden="true"></i>
+                    Agendar sesión
+                </a>
             </div>
         </div>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-3 text-center">
-                <div id="preview" style="height: 200px">
-                    <img src="~/@Model.Foto" class="img-circle img-responsive">
-                </div>
-                <h4 style="padding-top:10px;">@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.ApellidoPaterno) @Html.DisplayFor(model => model.ApellidoMaterno)</h4>
-                <form asp-action="ActualizarImagen" asp-route-id="@Model.Id" enctype="multipart/form-data" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Id" />
-                    <div style="padding-top:10px;" class="form-group">
-                        <input id="FotoArchivo" name="FotoArchivo" type="file" class="form-control" />
-                    </div>
-                    <!--
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cropModal">
-                        Seleccionar zona de recorte
-                    </button>
-                    -->
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary boton-lista">
-                            <i class="fas fa-save"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
+            <div class="col-md-1"></div>
             <div class="col-md-3">
                 <p>
-                    <strong>Discapacidad</strong><br>
+                    <strong>Fecha de la sesión</strong><br>
                     @if (Model.Rut != null)
                     {
                         <span class="badge badge-dark">@Html.DisplayFor(model => model.Rut)</span>
@@ -244,8 +236,10 @@
                         <span class="badge badge-danger">No está definido</span>
                     }
                 </p>
+            </div>
+            <div class="col-md-4"
                 <p>
-                    <strong>Porcentaje de discapacidad</strong><br>
+                    <strong>Duración</strong><br>
                     @if (Model.Genero != null)
                     {
                         @Html.DisplayFor(model => model.Genero)
@@ -255,117 +249,11 @@
                         <span class="badge badge-danger">No está definido</span>
                     }
                 </p>
-                <p>
-                    <strong>Tipo de discapacidad</strong><br>
-                    @if (Model.Celular != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Celular)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definido</span>
-                    }
-                </p>
-                <p>
-                    <strong>Email institucional</strong><br>
-                    @if (Model.CorreoInstitucional != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.CorreoInstitucional)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definido</span>
-                    }
-                </p>
-                <p>
-                    <strong>Email personal</strong><br>
-                    @if (Model.CorreoPersonal != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.CorreoPersonal)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definido</span>
-                    }
-                </p>
-                <p>
-                    <strong>Fecha de nacimiento</strong><br>
-                    @if (Model.FechaNacimiento != null)
-                    {
-                        <span class="badge badge-dark">@ViewBag.FechaNacimiento</span>
-                        <span class="badge badge-dark">@ViewBag.Edad años</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definida</span>
-                    }
-                </p>
-            </div>
-            <div class="col-md-3 linea-separadora linea-separadora-derecha">
-                <p>
-                    <strong>Año de ingreso</strong><br>
-                    @if (Model.EgresoPiu != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.EgresoPiu)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definida</span>
-                    }
-                </p>
-                @if (Model.EgresoPiu != null)
-                {
-                    <p>
-                        <strong>Año de egreso</strong><br>
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.EgresoPiu)</span>
-                    </p>
-                }
-                else
-                {
-                    <p>
-                        <strong>Año de egreso</strong><br>
-                        <span class="badge badge-danger">No está definida</span>
-                    </p>
-                }
-
-                <p>
-                    <strong>Carrera</strong><br>
-                    @if (Model.CarreraId != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Carrera.Nombre)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definida</span>
-                    }
-                </p>
-                <p>
-                    <strong>Campus</strong><br>
-                    @if (Model.CampusId != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Campus.Nombre)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definida</span>
-                    }
-                </p>
-                <p>
-                    <strong>Jornada</strong><br>
-                    @if (Model.JornadaId != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Jornada.Nombre)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definida</span>
-                    }
-                </p>
-
             </div>
             <div class="col-md-3 text-right">
-                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
-                    <i class="fas fa-edit" aria-hidden="true"></i>
+                <a class="btn btn-secondary boton-lista" asp-action="Sesion" asp-route-id="@Model.Id">
+                    <i class="fas fa-eye" aria-hidden="true"></i>
+                    Más información
                 </a>
             </div>
         </div>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PIU.Models.Docente>
+﻿@model IEnumerable<PIU.Models.Estudiante>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,12 +7,12 @@
 <div class="card-body">
     <div class="row">
         <div class="col-md-8">
-            <h2>Docentes</h2>
+            <h2>Estudiantes</h2>
         </div>
         <div class="col-md-4 text-right">
             <a class="btn btn-secondary" asp-action="Create">
                 <i class="fas fa-user-plus" aria-hidden="true"></i>
-                Añadir docentes
+                Añadir estudiante
             </a>
         </div>
     </div>
@@ -26,8 +26,30 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
+                            @if (item.Foto != null)
+                            {
+                                <img src="~/@item.Foto" class="img-circle-index img-responsive">
+                            }
+                            else
+                            {
+                                <img src="~/img/Estudiante/FotoPerfil/default.png" class="img-circle-index img-responsive">
+                            }
                         </div>
                         <div class="col-md-4">
+                            <i class="fas fa-id-card"></i>
+                            <strong>RUT</strong><br />
+                            @if (item.Rut != null)
+                            {
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.Rut)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    El RUT no ha sido ingresado
+                                </p>
+                            }
                             <i class="fas fa-user"></i>
                             <strong>Nombre</strong><br />
                             @if (item.Nombre != null)
@@ -42,54 +64,44 @@
                                     El nombre no ha sido ingresado
                                 </p>
                             }
-                            <i class="fas fa-briefcase"></i>
-                            <strong>Cargo</strong><br />
-                            @if (item.Cargo != null)
-                            {
-                                <p>
-                                    @Html.DisplayFor(modelItem => item.Cargo)
-                                </p>
-                            }
-                            else
-                            {
-                                <p>
-                                    El cargo no ha sido ingresado
-                                </p>
-                            }
                         </div>
                         <div class="col-md-5">
-                            <i class="fas fa-envelope"></i>
-                            <strong>Correo</strong><br />
-                            @if (item.Correo != null)
+                            <i class="fas fa-school"></i>
+                            <strong>Campus</strong><br />
+                            @if (item.Campus != null)
                             {
                                 <p>
-                                    @Html.DisplayFor(modelItem => item.Correo)
+                                    @Html.DisplayFor(modelItem => item.Campus.Nombre)
                                 </p>
                             }
                             else
                             {
                                 <p>
-                                    El correo no ha sido ingresado
+                                    El campus no ha sido ingresado
                                 </p>
                             }
-                            <i class="fas fa-phone"></i>
-                            <strong>Celular</strong><br />
-                            @if (item.Celular != null)
+                            <i class="fas fa-graduation-cap"></i>
+                            <strong>Carrera</strong><br />
+                            @if (item.Carrera != null)
                             {
                                 <p>
-                                    @Html.DisplayFor(modelItem => item.Celular)
+                                    @Html.DisplayFor(modelItem => item.Carrera.Nombre)
                                 </p>
                             }
                             else
                             {
                                 <p>
-                                    EL celular no ha sido ingresada
+                                    La carrera no ha sido ingresada
                                 </p>
                             }
                         </div>
                     </div>
                     <div class="row mt-auto">
                         <div class="col-md-12 text-right">
+                            <a class="btn btn-outline-success boton-lista" href="Estudiantes/Agendar/@item.Id">
+                                <i class="fas fa-calendar" style="width: 20px; height: 20px;"></i>
+                                Agendar sesión
+                            </a>
                             <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-route-id="@item.Id">
                                 <i class="fas fa-eye" style="width: 20px; height: 20px;"></i>
                                 Ver detalles

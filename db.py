@@ -154,18 +154,17 @@ class Sesion(Base):
     __tablename__ = 'sesion'
     id = Column(Integer, primary_key=True)
     estudiante_id = Column(Integer, ForeignKey('estudiante.id'))
-    fecha = Column(DateTime)
+    fecha_inicio = Column(DateTime)
+    fecha_termino = Column(DateTime)
     via_contacto = Column(String(length=20))
-    objetivo = Column(String(length=100))
+    objetivo = Column(String(length=150))
+    observacion_inicio = Column(String(length=300))
+    observacion_desarrollo = Column(String(length=300))
+    observacion_cierre = Column(String(length=300))
+    accion_inicio = Column(String(length=300))
+    accion_desarrollo = Column(String(length=300))
+    accion_cierre = Column(String(length=300))
     asistio = Column(Boolean)
-
-class DetalleSesion(Base):
-    __tablename__ = 'detalle_sesion'
-    id = Column(Integer, primary_key=True)
-    sesion_id = Column(Integer, ForeignKey('sesion.id'))
-    etapa = Column(String(length=10))
-    acciones = Column(String(length=100))
-    observaciones = Column(String(length=100))
 
 class AgendaSesion(Base):
     __tablename__ = 'agenda_sesion'

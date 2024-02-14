@@ -16,5 +16,9 @@
     box-shadow: var(--shadow-elevation-medium);
 }
 .badge{
+    border-radius: 50px;
+    box-shadow: var(--shadow-elevation-medium);
+}
+.boton-wsp{
     box-shadow: var(--shadow-elevation-medium);
 }

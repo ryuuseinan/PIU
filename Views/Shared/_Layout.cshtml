@@ -36,7 +36,6 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">CRUD</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Campus" asp-action="Index">Campus</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Jornadums" asp-action="Index">Jornadas</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Carreras" asp-action="Index">Carreras</a>
@@ -59,8 +58,8 @@
                         <li class="nav-item dropdown">
                             <form class="form-inline" asp-controller="Estudiantes" asp-action="Index" method="post">
                                 <div class="input-group">
-                                    <input type="text" name="searchString" placeholder="Ingrese RUT, nombre o apellido" class="form-control" style="width: 250px;" />
-                                    <button type="submit" class="btn btn-secondary">
+                                    <input type="text" name="searchString" placeholder="Ingrese RUT, nombre o apellido" class="form-control" style="width: 250px;border-radius:0; border-top-left-radius: 50px; border-bottom-left-radius: 50px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;" />
+                                    <button type="submit" style="border-radius:0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 50px; border-bottom-right-radius: 50px;" class="btn btn-secondary">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>

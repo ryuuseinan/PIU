@@ -65,21 +65,33 @@ label {
     height: 100px;
     z-index: 99;
 }
+.card {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+.titulo-card {
+    padding-left:20px;
+}
 .card-header{
     background-color: #101820;
 }
-.img-circle {
+.img-circle-index {
     border-radius: 50%;
     height: 200px;
+    max-height: 110px;
+    max-width: 110px;
+    display: block; /* Asegura que la imagen sea un elemento de bloque */
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+}
+.img-circle-details {
+    border-radius: 50%;
+    height: 200px;
+    max-height: 200px;
+    max-width: 200px;
     display: block; /* Asegura que la imagen sea un elemento de bloque */
     margin: 0 auto; /* Centra la imagen horizontalmente */
 }
 .badge {
     font-size: 0.9em;
-}
-a {
-    color: white;
-}
-a:hover {
-    color: white; /* Color al hacer hover */
 }

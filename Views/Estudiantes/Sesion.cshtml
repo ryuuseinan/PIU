@@ -1,0 +1,206 @@
+﻿@model PIU.Models.Estudiante
+
+@{
+    ViewData["Title"] = "Sesión";
+}
+<style>
+    a {
+        color: white;
+    }
+
+        a:hover {
+            color: white; /* Color al hacer hover */
+        }
+    .card {
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+    </style>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 text-left">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary boton-lista">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Volver
+                </a>
+            </div>
+            <div class="col-md-8">
+                <h3 class="titulo-card">Información de la sesión</h3>
+            </div>
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <table>
+            <tr>
+                <th>FECHA DE LA SESIÓN</th>
+                <th>VÍA DE CONTACTO/SESIÓN</th>
+                <th>OBJETIVO/S DE LA SESIÓN</th>
+                <th>ETAPA DE SESIÓN</th>
+                <th>DESCRIPCIÓN DE ACCIONES (PLANIFICACIÓN)</th>
+                <th>OBSERVACIONES SEGÚN ETAPA DE SESIÓN</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>5/8/2023</td>
+                <td>VIDEOLLAMADA</td>
+                <td>REALIZAR ENTREVISTA Y ENCUESTA NEE</td>
+                <td>INICIO</td>
+                <td></td>
+                <td>OBSERVACIONES DEL INICIO LUIS SE CONECTA TARDE A LA SESION, NO ENCIENDE LA CAMARA Y MANIFIESTA ESTAR APURADO</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>DESARROLLO</td>
+                <td></td>
+                <td>NO SE LOGRA REALIZAR LA ENTREVISTA ACORDADA</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>CIERRE</td>
+                <td></td>
+                <td>SE COMPROMETE A ASISTIR PRESENCIAL A LA PROXIMA SESION DEL DIA LUNES, SE DESCONECTA A LOS 15 MIN DE INCIADA LA SESION POR TENER COSAS QUE HACER.</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+@section Scripts {
+    <script>
+        
+        $('#FotoArchivo').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#image-preview-modal').attr('src', e.target.result);
+                $('#image-preview-modal').show();
+                $('#cropper1').croppie('bind', {
+                    url: e.target.result
+                });
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+        
+        function cropAndUpload() {
+            basic.croppie('result', 'blob').then(function (blob) {
+                var formData = new FormData();
+                formData.append('id', @Model.Id);
+                formData.append('file', blob);
+                var myAppUrlSettings =
+                {
+                    myAppRoot: '@Url.Action("ActualizarImagen", "Estudiantes")',
+                    myApiUrl: '@Model.Id'
+                }
+                var request = new XMLHttpRequest();
+                request.open('POST', myAppUrlSettings.myAppRoot, true);
+                request.send(formData);
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        var responde = JSON.parse(request.responseText);
+                        if (responde.message == "OK") {
+                            alert("Imagen subida correctamente");
+                            window.location.reload();
+                        }
+                        if (responde.message == "ERROR") {
+                            alert("Error al subir la imagen");
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        var basic = $('#cropper1').croppie({
+            viewport: { width: '100%', height: '100%' },
+            boundary: { width: '100%', height: 400 },  // Ajusta la altura según tus necesidades
+            showZoomer: true,
+            enableResize: true,
+            url: 'https://via.placeholder.com/300x300',
+            format: 'png'
+        });
+
+        $('#cropModal').on('shown.bs.modal', function () {
+            // Ajusta el tamaño del Croppie cuando se muestra el modal
+            basic.croppie('bind');
+        });
+
+
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#cropper1').croppie('bind', {
+                        url: e.target.result
+                    }).then(function () {
+                        console.log('jQuery bind complete');
+                    });
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#btnupload').on('click', function () {
+            basic.croppie('result', 'blob').then(function (blob) {
+                var formData = new FormData();
+                formData.append('id', @Model.Id);
+                formData.append('file', blob);
+                var myAppUrlSettings =
+                {
+                    myAppRoot: '@Url.Action("ActualizarImagen", "Estudiantes")',
+                    myApiUrl: '@Model.Id'
+                }
+                var request = new XMLHttpRequest();
+                request.open('POST', myAppUrlSettings.myAppRoot, true);
+                request.send(formData);
+                request.onreadystatechange = function () {
+                    if (request.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        var responde = JSON.parse(request.responseText);
+                        if (responde.message == "OK") {
+                            alert("Imagen subida correctamente");
+                            window.location.reload();
+                        }
+                        if (responde.message == "ERROR") {
+                            alert("Error al subir la imagen");
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

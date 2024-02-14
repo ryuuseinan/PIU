@@ -21,8 +21,6 @@ public partial class PiuContext : DbContext
 
     public virtual DbSet<Carrera> Carreras { get; set; }
 
-    public virtual DbSet<DetalleSesion> DetalleSesions { get; set; }
-
     public virtual DbSet<Docente> Docentes { get; set; }
 
     public virtual DbSet<DocenteCarrera> DocenteCarreras { get; set; }
@@ -51,7 +49,7 @@ public partial class PiuContext : DbContext
     {
         modelBuilder.Entity<AgendaSesion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__agenda_s__3213E83FEE43D7D1");
+            entity.HasKey(e => e.Id).HasName("PK__agenda_s__3213E83F6A566780");
 
             entity.ToTable("agenda_sesion");
 
@@ -68,7 +66,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Campus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__campus__3213E83F03BE59FF");
+            entity.HasKey(e => e.Id).HasName("PK__campus__3213E83F090373A3");
 
             entity.ToTable("campus");
 
@@ -82,7 +80,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Carrera>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__carrera__3213E83F4B7DD90B");
+            entity.HasKey(e => e.Id).HasName("PK__carrera__3213E83F0B21AA5C");
 
             entity.ToTable("carrera");
 
@@ -99,35 +97,9 @@ public partial class PiuContext : DbContext
                 .HasConstraintName("FK__carrera__escuela__4D94879B");
         });
 
-        modelBuilder.Entity<DetalleSesion>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__detalle___3213E83FE4DF42B3");
-
-            entity.ToTable("detalle_sesion");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Acciones)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("acciones");
-            entity.Property(e => e.Etapa)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("etapa");
-            entity.Property(e => e.Observaciones)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("observaciones");
-            entity.Property(e => e.SesionId).HasColumnName("sesion_id");
-
-            entity.HasOne(d => d.Sesion).WithMany(p => p.DetalleSesions)
-                .HasForeignKey(d => d.SesionId)
-                .HasConstraintName("FK__detalle_s__sesio__6754599E");
-        });
-
         modelBuilder.Entity<Docente>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__docente__3213E83FB8377548");
+            entity.HasKey(e => e.Id).HasName("PK__docente__3213E83F25CE1CDF");
 
             entity.ToTable("docente");
 
@@ -161,7 +133,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<DocenteCarrera>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__docente___3213E83F8F6B6675");
+            entity.HasKey(e => e.Id).HasName("PK__docente___3213E83F21B82614");
 
             entity.ToTable("docente_carrera");
 
@@ -181,7 +153,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Documento>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__document__3213E83FCF26AC87");
+            entity.HasKey(e => e.Id).HasName("PK__document__3213E83FFA11FCAC");
 
             entity.ToTable("documento");
 
@@ -203,7 +175,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Escuela>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__escuela__3213E83F2F511B3E");
+            entity.HasKey(e => e.Id).HasName("PK__escuela__3213E83F5F3E9EB5");
 
             entity.ToTable("escuela");
 
@@ -217,7 +189,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Estudiante>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__estudian__3213E83FCAC5562D");
+            entity.HasKey(e => e.Id).HasName("PK__estudian__3213E83F9DB52925");
 
             entity.ToTable("estudiante");
 
@@ -284,7 +256,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Funcionalidad>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__funciona__3213E83FEC658B7A");
+            entity.HasKey(e => e.Id).HasName("PK__funciona__3213E83FF01AB195");
 
             entity.ToTable("funcionalidad");
 
@@ -297,21 +269,21 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Genero>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__genero__3213E83F4E81DB8F");
+            entity.HasKey(e => e.Id).HasName("PK__genero__3213E83FEE0912D4");
 
             entity.ToTable("genero");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Activo).HasColumnName("activo");
             entity.Property(e => e.Nombre)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("nombre");
         });
 
         modelBuilder.Entity<Jornadum>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__jornada__3213E83F57F1731D");
+            entity.HasKey(e => e.Id).HasName("PK__jornada__3213E83F3E5E33BB");
 
             entity.ToTable("jornada");
 
@@ -325,13 +297,13 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Persona>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__persona__3213E83F73121BDB");
+            entity.HasKey(e => e.Id).HasName("PK__persona__3213E83F84A52931");
 
             entity.ToTable("persona");
 
-            entity.HasIndex(e => e.Celular, "UQ__persona__2E4973E7250F4741").IsUnique();
+            entity.HasIndex(e => e.Celular, "UQ__persona__2E4973E7716BDDDA").IsUnique();
 
-            entity.HasIndex(e => e.Rut, "UQ__persona__C2B74E761A0E6E95").IsUnique();
+            entity.HasIndex(e => e.Rut, "UQ__persona__C2B74E762850A009").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Activo).HasColumnName("activo");
@@ -364,7 +336,7 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Rol>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__rol__3213E83FF4555232");
+            entity.HasKey(e => e.Id).HasName("PK__rol__3213E83F85163C2E");
 
             entity.ToTable("rol");
 
@@ -388,7 +360,7 @@ public partial class PiuContext : DbContext
                         .HasConstraintName("FK__funcional__rol_i__44FF419A"),
                     j =>
                     {
-                        j.HasKey("RolId", "FuncionalidadId").HasName("PK__funciona__9C554FB0CCF70C02");
+                        j.HasKey("RolId", "FuncionalidadId").HasName("PK__funciona__9C554FB0E5A1AF49");
                         j.ToTable("funcionalidad_rol");
                         j.IndexerProperty<int>("RolId").HasColumnName("rol_id");
                         j.IndexerProperty<int>("FuncionalidadId").HasColumnName("funcionalidad_id");
@@ -397,20 +369,47 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Sesion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__sesion__3213E83F6EDCA08F");
+            entity.HasKey(e => e.Id).HasName("PK__sesion__3213E83F87BF7AB6");
 
             entity.ToTable("sesion");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AccionCierre)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("accion_cierre");
+            entity.Property(e => e.AccionDesarrollo)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("accion_desarrollo");
+            entity.Property(e => e.AccionInicio)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("accion_inicio");
             entity.Property(e => e.Asistio).HasColumnName("asistio");
             entity.Property(e => e.EstudianteId).HasColumnName("estudiante_id");
-            entity.Property(e => e.Fecha)
+            entity.Property(e => e.FechaInicio)
                 .HasColumnType("datetime")
-                .HasColumnName("fecha");
+                .HasColumnName("fecha_inicio");
+            entity.Property(e => e.FechaTermino)
+                .HasColumnType("datetime")
+                .HasColumnName("fecha_termino");
             entity.Property(e => e.Objetivo)
-                .HasMaxLength(100)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("objetivo");
+            entity.Property(e => e.ObservacionCierre)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("observacion_cierre");
+            entity.Property(e => e.ObservacionDesarrollo)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("observacion_desarrollo");
+            entity.Property(e => e.ObservacionInicio)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("observacion_inicio");
             entity.Property(e => e.ViaContacto)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -423,13 +422,13 @@ public partial class PiuContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__usuario__3213E83F07904512");
+            entity.HasKey(e => e.Id).HasName("PK__usuario__3213E83F37EC65F0");
 
             entity.ToTable("usuario");
 
-            entity.HasIndex(e => e.Correo, "UQ__usuario__2A586E0BCB9C0DFC").IsUnique();
+            entity.HasIndex(e => e.Correo, "UQ__usuario__2A586E0BD312A3A0").IsUnique();
 
-            entity.HasIndex(e => e.Nombre, "UQ__usuario__72AFBCC616E9EB3F").IsUnique();
+            entity.HasIndex(e => e.Nombre, "UQ__usuario__72AFBCC69E501D4C").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Activo).HasColumnName("activo");

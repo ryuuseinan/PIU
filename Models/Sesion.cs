@@ -9,15 +9,27 @@ public partial class Sesion
 
     public int? EstudianteId { get; set; }
 
-    public DateTime? Fecha { get; set; }
+    public DateTime? FechaInicio { get; set; }
+
+    public DateTime? FechaTermino { get; set; }
 
     public string? ViaContacto { get; set; }
 
     public string? Objetivo { get; set; }
 
-    public bool? Asistio { get; set; }
+    public string? ObservacionInicio { get; set; }
 
-    public virtual ICollection<DetalleSesion> DetalleSesions { get; set; } = new List<DetalleSesion>();
+    public string? ObservacionDesarrollo { get; set; }
+
+    public string? ObservacionCierre { get; set; }
+
+    public string? AccionInicio { get; set; }
+
+    public string? AccionDesarrollo { get; set; }
+
+    public string? AccionCierre { get; set; }
+
+    public bool? Asistio { get; set; }
 
     public virtual Estudiante? Estudiante { get; set; }
 }

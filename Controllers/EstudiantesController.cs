@@ -26,7 +26,10 @@ namespace PIU.Controllers
         // GET: Estudiantes
         public async Task<IActionResult> Index()
         {
-            var piuContext = _context.Estudiantes.Include(e => e.Campus).Include(e => e.Carrera).Include(e => e.Genero).Include(e => e.Jornada);
+            var piuContext = _context.Estudiantes
+                .Include(e => e.Campus)
+                .Include(e => e.Carrera)
+                .Include(e => e.Jornada);
             return View(await piuContext.ToListAsync());
         }
 
@@ -45,6 +48,9 @@ namespace PIU.Controllers
                              e.Nombre.Contains(searchString) ||
                              e.ApellidoPaterno.Contains(searchString) ||
                              e.ApellidoMaterno.Contains(searchString)))
+                .Include(e => e.Campus)
+                .Include(e => e.Carrera)
+                .Include(e => e.Jornada)
                 .ToListAsync();
 
             // Pasa los resultados a la vista
@@ -62,8 +68,34 @@ namespace PIU.Controllers
             var estudiante = await _context.Estudiantes
                 .Include(e => e.Campus)
                 .Include(e => e.Carrera)
-                .Include(e => e.Genero)
                 .Include(e => e.Jornada)
+                .Include(e => e.Genero)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (estudiante == null)
+            {
+                return NotFound();
+            }
+            string? fechaNacimiento = estudiante.FechaNacimiento?.ToShortDateString();
+            ViewData["FechaNacimiento"] = fechaNacimiento;
+
+            int edad = CalcularEdad(estudiante.FechaNacimiento ?? DateTime.MinValue);
+            ViewData["Edad"] = edad;
+
+            return View(estudiante);
+        }
+        // GET: Estudiantes/Sesion/5
+        public async Task<IActionResult> Sesion(int? id)
+        {
+            if (id == null || _context.Estudiantes == null)
+            {
+                return NotFound();
+            }
+
+            var estudiante = await _context.Estudiantes
+                .Include(e => e.Campus)
+                .Include(e => e.Carrera)
+                .Include(e => e.Jornada)
+                .Include(e => e.Genero)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)
             {
@@ -83,8 +115,8 @@ namespace PIU.Controllers
         {
             ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Id");
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Id");
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id");
             ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Id");
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre");
             return View();
         }
 
@@ -106,7 +138,6 @@ namespace PIU.Controllers
 
             ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
             ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
             return View(estudiante);
         }
@@ -127,7 +158,6 @@ namespace PIU.Controllers
 
             ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
 
             // Lista de años (ajústala según tus necesidades)
             int currentYear = DateTime.Now.Year;
@@ -136,7 +166,7 @@ namespace PIU.Controllers
             ViewData["Anios"] = new SelectList(anios, estudiante.IngresoPiu);
             ViewData["Anios"] = new SelectList(anios, estudiante.EgresoPiu);
             ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
-
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
             return View(estudiante);
         }
 
@@ -157,6 +187,26 @@ namespace PIU.Controllers
                 try
                 {
                     // Actualizar los datos en la base de datos
+                    var fechaNacimiento = estudiante.FechaNacimiento;
+                    var fechaLimite = DateTime.Today.AddYears(-15);
+                    if (fechaNacimiento > fechaLimite)
+                    {
+                        ModelState.AddModelError("FechaNacimiento", "La fecha de nacimiento debe ser anterior a 15 años de la fecha actual.");
+                        // Recarga de los datos necesarios para el dropdown de la vista, en caso de necesitarlo
+                        ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
+                        ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+
+                        // Lista de años (ajústala según tus necesidades)
+                        int currentYear = DateTime.Now.Year;
+                        List<int> anios = Enumerable.Range(2016, currentYear - 2016 + 1).ToList();
+
+                        ViewData["Anios"] = new SelectList(anios, estudiante.IngresoPiu);
+                        ViewData["Anios"] = new SelectList(anios, estudiante.EgresoPiu);
+                        ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
+                        ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
+                        return View(estudiante);
+                    }
+                    estudiante.CorreoInstitucional += Request.Form["dominioSelector"];
                     _context.Update(estudiante);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", "Estudiantes", new { id = estudiante.Id });
@@ -172,8 +222,8 @@ namespace PIU.Controllers
             // Si el modelo no es válido, regresa a la vista con el modelo
             ViewData["CampusId"] = new SelectList(_context.Campuses, "Id", "Nombre", estudiante.CampusId);
             ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
             ViewData["JornadaId"] = new SelectList(_context.Jornada, "Id", "Nombre", estudiante.JornadaId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre", estudiante.GeneroId);
             return View(estudiante);
         }
 
@@ -189,7 +239,6 @@ namespace PIU.Controllers
             var estudiante = await _context.Estudiantes
                 .Include(e => e.Campus)
                 .Include(e => e.Carrera)
-                .Include(e => e.Genero)
                 .Include(e => e.Jornada)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)

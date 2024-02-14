@@ -1,8 +1,11 @@
 .boton-lista {
-    width: 45px;
-    height: 45px;
-    padding: 13px 18px;
-    border-radius: 60px;
+    border-radius: 50px;
     font-size: 15px;
     text-align: center;
+}
+.boton-wsp {
+    border-radius: 50%;
+}
+.btn{
+    border-radius: 50px;
 }

@@ -17,7 +17,9 @@ public partial class Estudiante
 
     public DateTime? FechaNacimiento { get; set; }
 
-    public string? Correo { get; set; }
+    public string? CorreoInstitucional { get; set; }
+
+    public string? CorreoPersonal { get; set; }
 
     public string? Celular { get; set; }
 

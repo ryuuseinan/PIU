@@ -9,7 +9,19 @@
         <div class="col-md-8">
             <h2>Estudiantes</h2>
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-nd-1 text-right">
+            <div class="dropdown">
+                <button class="btn btn-secondary boton-lista dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Elementos por página
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">10</a>
+                    <a class="dropdown-item" href="#">20</a>
+                    <a class="dropdown-item" href="#">30</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 text-right">
             <a class="btn btn-secondary" asp-action="Create">
                 <i class="fas fa-user-plus" aria-hidden="true"></i>
                 Añadir estudiante
@@ -17,115 +29,103 @@
         </div>
     </div>
 </div>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Campus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Carrera)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
 
-@foreach (var item in Model)
-{
-            <div class="row">
-                <div class="col-md-2">
-                    @if (item.Foto != null)
-                    {
-                        <img src="~/@item.Foto" class="img-circle img-responsive" style="height:110px">
-                    }
-                    else
-                    {
-                        <img src="~/img/Estudiante/FotoPerfil/default.png" class="img-circle img-responsive" style="height:110px">
-                    }
-                </div>
-                <div class="col-md-4">
-                    @if (item.Rut != null)
-                    {
-                        <p>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            @if (item.Foto != null)
+                            {
+                                <img src="~/@item.Foto" class="img-circle-index img-responsive">
+                            }
+                            else
+                            {
+                                <img src="~/img/Estudiante/FotoPerfil/default.png" class="img-circle-index img-responsive">
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-id-card"></i>
                             <strong>RUT</strong><br />
-                            @Html.DisplayFor(modelItem => item.Rut)
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>RUT</strong><br />
-                            El RUT no ha sido ingresado
-                        </p>
-                    }
-                    @if (item.Nombre != null)
-                    {
-                        <p>
+                            @if (item.Rut != null)
+                            {
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.Rut)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    El RUT no ha sido ingresado
+                                </p>
+                            }
+                            <i class="fas fa-user"></i>
                             <strong>Nombre</strong><br />
-                            @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Nombre</strong><br />
-                            El nombre no ha sido ingresado
-                        </p>
-                    }
-                </div>
-                <div class="col-md-4">
-                    @if (item.Campus != null)
-                    {
-                        <p>
+                            @if (item.Nombre != null)
+                            {
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    El nombre no ha sido ingresado
+                                </p>
+                            }
+                        </div>
+                        <div class="col-md-5">
+                            <i class="fas fa-school"></i>
                             <strong>Campus</strong><br />
-                            @Html.DisplayFor(modelItem => item.Campus.Nombre)
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Campus</strong><br />
-                            El campus no ha sido ingresado
-                        </p>
-                    }
-                    @if (item.Carrera != null)
-                    {
-                        <p>
+                            @if (item.Campus != null)
+                            {
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.Campus.Nombre)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    El campus no ha sido ingresado
+                                </p>
+                            }
+                            <i class="fas fa-graduation-cap"></i>
                             <strong>Carrera</strong><br />
-                            @Html.DisplayFor(modelItem => item.Carrera.Nombre)
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Carrera</strong><br />
-                            La carrera no ha sido ingresada
-                        </p>
-                    }
-                </div>
-                    <div class="col-md-1 text-right" style="display:grid;align-items: center;">
-
-                    <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-route-id="@item.Id">
-                        <i class="fas fa-eye" style="width: 20px;
-                        height: 20px;"></i>
-                    </a>
-                    <a class="btn btn-outline-danger boton-lista" asp-action="Delete" asp-route-id="@item.Id">
-                        <i class="fas fa-trash" style="width: 20px;
-                        height: 20px;"></i>
-                    </a>
+                            @if (item.Carrera != null)
+                            {
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.Carrera.Nombre)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    La carrera no ha sido ingresada
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-auto">
+                        <div class="col-md-12 text-right">
+                            <a class="btn btn-outline-success boton-lista" href="Estudiantes/Agendar/@item.Id">
+                                <i class="fas fa-calendar" style="width: 20px; height: 20px;"></i>
+                                Agendar sesión
+                            </a>
+                            <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="fas fa-eye" style="width: 20px; height: 20px;"></i>
+                                Ver detalles
+                            </a>
+                            <a class="btn btn-outline-danger boton-lista" asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="fas fa-trash" style="width: 20px; height: 20px;"></i>
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-    <br />
-}
-    </tbody>
-</table>
+        </div>
+    }
+</div>

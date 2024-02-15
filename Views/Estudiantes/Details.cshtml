@@ -21,8 +21,14 @@
                     Volver
                 </a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <h3 class="titulo-card">Información del estudiante</h3>
+            </div>
+            <div class="col-md-2 text-right" style="">
+                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit" aria-hidden="true"></i>
+                    Editar
+                </a>
             </div>
         </div>
     </div>
@@ -194,13 +200,9 @@
                         <span class="badge badge-danger">No está definida</span>
                     }
                 </p>
-                
             </div>
-            <div class="col-md-3 text-right">
-                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
-                    <i class="fas fa-edit" aria-hidden="true"></i>
-                    Editar
-                </a>
+            <div class="col-md-2 text-right">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/UVM_nuevo_logo.png" style="height:150px;width:150px;position:absolute;bottom:4%;left:50%;opacity:0.25" />
             </div>
         </div>
     </div>
@@ -209,56 +211,112 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-md-1 text-left"></div>
-            <div class="col-md-7">
-                <h3>Sesiones del estudiante</h3>
+            <div class="col-md-1 text-left">
+                <a asp-action="Index" class="btn btn-secondary boton-lista">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Volver
+                </a>
+            </div>
+            <div class="col-md-8">
+                <h3 class="titulo-card">Sesiones recientes</h3>
             </div>
             <div class="col-md-3 text-right">
-                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-route-id="@Model.Id">
-                    <i class="fas fa-calendar" aria-hidden="true"></i>
-                    Agendar sesión
-                </a>
+                <form asp-action="Agendar" asp-controller="Estudiantes" method="post">
+                    <input type="hidden" value="@Model.Id" name="EstudianteId" />
+                    <input type="hidden" value="@Model.Nombre" name="EstudianteNombre" />
+                    <input type="hidden" value="@Model.ApellidoPaterno" name="EstudianteApellidoPaterno" />
+                    <input type="hidden" value="@Model.ApellidoMaterno" name="EstudianteApellidoMaterno" />
+
+                    <button type="submit" class="btn btn-secondary boton-lista">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        Agendar sesión
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-3">
-                <p>
-                    <strong>Fecha de la sesión</strong><br>
-                    @if (Model.Rut != null)
-                    {
-                        <span class="badge badge-dark">@Html.DisplayFor(model => model.Rut)</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definido</span>
-                    }
-                </p>
-            </div>
-            <div class="col-md-4"
-                <p>
-                    <strong>Duración</strong><br>
-                    @if (Model.Genero != null)
-                    {
-                        @Html.DisplayFor(model => model.Genero)
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">No está definido</span>
-                    }
-                </p>
-            </div>
-            <div class="col-md-3 text-right">
-                <a class="btn btn-secondary boton-lista" asp-action="Sesion" asp-route-id="@Model.Id">
-                    <i class="fas fa-eye" aria-hidden="true"></i>
-                    Más información
-                </a>
+
+    @foreach (var sesion in Model.Sesions)
+    {
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-1">
+                    <p>
+                        <strong>Estado</strong><br>
+                        @if (sesion.FechaInicio >= DateTime.Now)
+                        {
+                            <span class="badge badge-danger">Pendiente</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success">Finalizada</span>
+                        }
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        <strong>Fecha de la sesión</strong><br>
+                        <span class="badge badge-dark">
+                            <i class="fas fa-calendar"></i>
+                            @sesion.FechaInicio?.ToString("dd/MM/yyyy")
+                        </span>
+                        <span class="badge badge-dark">
+                            <i class="fas fa-clock"></i>
+                            @sesion.FechaInicio?.ToString("HH:mm")~@sesion.FechaTermino?.ToString("HH:mm")
+                        </span>
+                    </p>
+                </div>
+
+                <div class="col-md-2">
+                    <p>
+                        <strong>Duración</strong><br>
+                        <span class="badge badge-dark">
+                            <i class="fas fa-clock"></i>
+                            @{
+                                TimeSpan duracion = (sesion.FechaTermino - sesion.FechaInicio) ?? TimeSpan.Zero;
+                                string duracionFormateada = $"{(int)duracion.Minutes} minutos";
+                            }
+                            @duracionFormateada
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <p>
+                        <strong>Modalidad</strong><br>
+                        <span class="badge badge-dark">
+                            <i class="fas fa-users"></i>
+                            @sesion.ViaContacto
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <p>
+                        <strong>Presente</strong><br>
+                            @if (sesion.Asistio == true)
+                            {
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            }
+                    </p>
+                </div>
+                <div class="col-md-1">
+                    <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-controller="Sesions" asp-route-id="@sesion.Id">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                        Más información
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
+
 <div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

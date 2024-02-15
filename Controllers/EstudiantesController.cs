@@ -32,6 +32,19 @@ namespace PIU.Controllers
                 .Include(e => e.Jornada);
             return View(await piuContext.ToListAsync());
         }
+        [HttpPost]
+        public async Task<IActionResult> Agendar(int estudianteId, string estudianteNombre, string estudianteApellidoPaterno, string estudianteApellidoMaterno)
+        {
+            if (ModelState.IsValid)
+            {
+                HttpContext.Session.SetInt32("EstudianteId", estudianteId);
+                string nombreCompleto = $"{estudianteNombre} {estudianteApellidoPaterno} {estudianteApellidoMaterno}";
+                HttpContext.Session.SetString("EstudianteNombre", nombreCompleto);
+                return RedirectToAction("Create", "Sesions");
+            }
+            // En este punto, puedes manejar el caso en el que el modelo no sea válido, por ejemplo, mostrando un mensaje de error.
+            return View("Index");
+        }
 
         // POST: Estudiantes/Search
         [HttpPost]
@@ -70,11 +83,14 @@ namespace PIU.Controllers
                 .Include(e => e.Carrera)
                 .Include(e => e.Jornada)
                 .Include(e => e.Genero)
+                .Include(e => e.Sesions)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)
             {
                 return NotFound();
             }
+            estudiante.Sesions = estudiante.Sesions.OrderByDescending(s => s.Id).Take(3).ToList();
+
             string? fechaNacimiento = estudiante.FechaNacimiento?.ToShortDateString();
             ViewData["FechaNacimiento"] = fechaNacimiento;
 
@@ -92,21 +108,11 @@ namespace PIU.Controllers
             }
 
             var estudiante = await _context.Estudiantes
-                .Include(e => e.Campus)
-                .Include(e => e.Carrera)
-                .Include(e => e.Jornada)
-                .Include(e => e.Genero)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (estudiante == null)
             {
                 return NotFound();
             }
-            string? fechaNacimiento = estudiante.FechaNacimiento?.ToShortDateString();
-            ViewData["FechaNacimiento"] = fechaNacimiento;
-
-            int edad = CalcularEdad(estudiante.FechaNacimiento ?? DateTime.MinValue);
-            ViewData["Edad"] = edad;
-
             return View(estudiante);
         }
 
@@ -349,6 +355,7 @@ namespace PIU.Controllers
 
             return edad;
         }
+
         private bool EstudianteExists(int id)
         {
           return (_context.Estudiantes?.Any(e => e.Id == id)).GetValueOrDefault();

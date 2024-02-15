@@ -110,10 +110,17 @@
                     </div>
                     <div class="row mt-auto">
                         <div class="col-md-12 text-right">
-                            <a class="btn btn-outline-success boton-lista" href="Estudiantes/Agendar/@item.Id">
-                                <i class="fas fa-calendar" style="width: 20px; height: 20px;"></i>
-                                Agendar sesión
-                            </a>
+                            <form asp-action="Agendar" asp-controller="Estudiantes" method="post">
+                                <input type="hidden" value="@item.Id" name="EstudianteId" />
+                                <input type="hidden" value="@item.Nombre" name="EstudianteNombre" />
+                                <input type="hidden" value="@item.ApellidoPaterno" name="EstudianteApellidoPaterno" />
+                                <input type="hidden" value="@item.ApellidoMaterno" name="EstudianteApellidoMaterno" />
+
+                                <button type="submit" class="btn btn-outline-success boton-lista">
+                                    <i class="fas fa-calendar" aria-hidden="true"></i>
+                                    Agendar sesión
+                                </button>
+                            </form>
                             <a class="btn btn-outline-info boton-lista" asp-action="Details" asp-route-id="@item.Id">
                                 <i class="fas fa-eye" style="width: 20px; height: 20px;"></i>
                                 Ver detalles

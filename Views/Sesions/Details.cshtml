@@ -1,0 +1,156 @@
+﻿@model PIU.Models.Sesion
+
+@{
+    ViewData["Title"] = "Detalles de la sesión";
+}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 text-left">
+                <a asp-action="Details" asp-controller="Estudiantes" asp-route-id="@Model.EstudianteId" class="btn btn-secondary boton-lista">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Volver
+                </a>
+            </div>
+            <div class="col-md-8">
+                <h3 class="titulo-card">Detalles de la sesión</h3>
+            </div>
+            <div class="col-md-3 text-right">
+                <a class="btn btn-secondary boton-lista" asp-action="Edit" asp-controller="Sesions" asp-route-id="@Model.Id">
+                    <i class="fas fa-pencil" aria-hidden="true"></i>
+                    Editar
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-1">
+                <p>
+                    <strong>Estado</strong><br>
+                    @if (Model.FechaInicio >= DateTime.Now)
+                    {
+                        <span class="badge badge-danger">Pendiente</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-success">Finalizada</span>
+                    }
+                </p>
+            </div>
+            <div class="col-md-3">
+                <p>
+                    <strong>Fecha de la sesión</strong><br>
+                    <span class="badge badge-dark">
+                        <i class="fas fa-calendar"></i>
+                        @Model.FechaInicio?.ToString("dd/MM/yyyy")
+                    </span>
+                    <span class="badge badge-dark">
+                        <i class="fas fa-clock"></i>
+                        @Model.FechaInicio?.ToString("HH:mm")~@Model.FechaTermino?.ToString("HH:mm")
+                    </span>
+                </p>
+            </div>
+
+            <div class="col-md-2">
+                <p>
+                    <strong>Duración</strong><br>
+                    <span class="badge badge-dark">
+                        <i class="fas fa-clock"></i>
+                        @{
+                            TimeSpan duracion = (Model.FechaTermino - Model.FechaInicio) ?? TimeSpan.Zero;
+                            string duracionFormateada = $"{(int)duracion.Minutes} minutos";
+                        }
+                        @duracionFormateada
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-2">
+                <p>
+                    <strong>Modalidad</strong><br>
+                    <span class="badge badge-dark">
+                        <i class="fas fa-users"></i>
+                        @Model.ViaContacto
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-2">
+                <p>
+                    <strong>Presente</strong><br>
+                    @if (Model.Asistio == true)
+                    {
+                        <span class="badge badge-success">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    }
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <table>
+                <tr>
+                    <th>OBJETIVOS DE LA SESIÓN</th>
+                </tr>
+                <tr>
+                    <td>@Model.Objetivo</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>ETAPA DE SESIÓN</th>
+                    <th>DESCRIPCIÓN DE ACCIONES (PLANIFICACIÓN)</th>
+                    <th>OBSERVACIONES SEGÚN ETAPA DE SESIÓN</th>
+                    
+                </tr>
+                <tr>
+                    <td class="etapa-sesion">INICIO</td>
+                    <td>@Model.AccionInicio</td>
+                    <td>@Model.ObservacionInicio</td>
+                    
+                </tr>
+                <tr>
+                    <td class="etapa-sesion">DESARROLLO</td>
+                    <td>@Model.AccionDesarrollo</td>
+                    <td>@Model.ObservacionDesarrollo</td>
+                </tr>
+                <tr>
+                    <td class="etapa-sesion">CIERRE</td>
+                    <td>@Model.AccionCierre</td>
+                    <td>@Model.ObservacionCierre</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<style>
+    table {
+        width: 95%;
+        padding-top:20px;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .etapa-sesion {
+        font-weight: bold;
+        background-color: rgba(0,0,0,0.05)
+    }
+</style>

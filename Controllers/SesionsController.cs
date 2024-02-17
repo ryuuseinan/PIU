@@ -124,10 +124,15 @@ namespace PIU.Controllers
 
             if (ModelState.IsValid)
             {
+                // Actualizar el modelo con los datos del formulario
+                await TryUpdateModelAsync(sesion);
+
+                // Verificar el valor del checkbox de asistencia
                 try
                 {
                     _context.Update(sesion);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "Sesions", new { id = sesion.Id });
                 }
                 catch (DbUpdateConcurrencyException)
                 {

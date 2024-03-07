@@ -3,15 +3,21 @@
 @{
     ViewData["Title"] = "Agendar sesión";
 }
+@{
+    var EstudianteId = Context.Session.GetInt32("EstudianteId");
+    var EstudianteNombre = Context.Session.GetString("EstudianteNombre");
+    var EstudianteRut = Context.Session.GetString("EstudianteRut");  
+}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="Asistio" type="hidden" value="false" />
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2 text-left">
-                            <a asp-action="Details" asp-controller="Estudiantes" class="btn btn-secondary boton-lista">
+                            <a asp-action="Details" asp-controller="Estudiantes" asp-route-id="@EstudianteId" class="btn btn-secondary boton-lista">
                                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
                                 Volver
                             </a>
@@ -23,15 +29,45 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3">
+                        <div class="col-md-8">
                             <p>
-                                <strong>Fecha de la sesión</strong><br>
-                                <input asp-for="FechaInicio" class="form-control" />
-                                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                                <strong>Nombre estudiante</strong><br>
+                                <input type="text" class="form-control" value="@EstudianteNombre" disabled />
+                                <input asp-for="EstudianteId" type="hidden" value="@EstudianteId" />
                             </p>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
+                            <p>
+                                <strong>RUT</strong><br>
+                                <input type="text" class="form-control" value="@EstudianteRut" disabled />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>
+                                <strong>Fecha</strong><br>
+                                <input asp-for="Fecha" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="Fecha" class="text-danger"></span>
+                            </p>
+                        </div>
+                        <div class="col-xd-2">
+                            <p>
+                                <strong>Desde</strong><br>
+                                <input asp-for="HoraInicio" type="time" class="form-control" />
+                                <span asp-validation-for="HoraInicio" class="text-danger"></span>
+                            </p>
+                        </div>
+                        <br />
+                        <p style="color:rgba(0,0,0,0)">.</p>
+                        <div class="col-xd-2">
+                            <p>
+                                <strong>Hasta</strong><br>
+                                <input asp-for="HoraTermino" type="time" class="form-control" />
+                                <span asp-validation-for="HoraTermino" class="text-danger"></span>
+                            </p>
+                        </div>
+                        <div class="col-md-5">
                             <p>
                                 <strong>Modalidad</strong><br>
                                 <input asp-for="ViaContacto" class="form-control" />
@@ -40,29 +76,67 @@
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <table>
-                            <tr>
-                                <th>OBJETIVOS DE LA SESIÓN</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label asp-for="Objetivo" class="control-label"></label>
-                                    <input asp-for="Objetivo" class="form-control" />
-                                    <span asp-validation-for="Objetivo" class="text-danger"></span>
-                                </td>
-                            </tr>
-                        </table>
+                        <div class="col-md-12">
+                            <table>
+                                <tr>
+                                    <th>OBJETIVOS DE LA SESIÓN</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input asp-for="Objetivo" class="form-control" />
+                                        <span asp-validation-for="Objetivo" class="text-danger"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <br />
+                    <div class="text-right">
+                        <input type="submit" value="Agendar" class="btn btn-primary" />
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        // Función para obtener la fecha actual en formato yyyy-MM-dd
+        function getCurrentDate() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        // Función para actualizar el atributo min de los inputs de hora
+        function updateMinTime() {
+            var fechaInput = document.getElementById('fechaInput');
+            var hoy = getCurrentDate();
+            var horaInputs = document.querySelectorAll('input[type="time"]');
+
+            if (fechaInput.value === hoy) {
+                var currentTime = new Date();
+                var currentHour = currentTime.getHours().toString().padStart(2, '0');
+                var currentMinute = currentTime.getMinutes().toString().padStart(2, '0');
+                var current = currentHour + ':' + currentMinute;
+
+                horaInputs.forEach(function (input) {
+                    input.min = current;
+                });
+            } else {
+                horaInputs.forEach(function (input) {
+                    input.removeAttribute('min');
+                });
+            }
+        }
+
+        // Actualizar el atributo min cuando se cambie la fecha
+        document.getElementById('fechaInput').addEventListener('change', updateMinTime);
+
+        // Llamar a la función para configurar el atributo min inicialmente
+        updateMinTime();
+    </script>
 }

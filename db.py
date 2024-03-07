@@ -154,8 +154,9 @@ class Sesion(Base):
     __tablename__ = 'sesion'
     id = Column(Integer, primary_key=True)
     estudiante_id = Column(Integer, ForeignKey('estudiante.id'))
-    fecha_inicio = Column(DateTime)
-    fecha_termino = Column(DateTime)
+    fecha = Column(DateTime)  # Cambio el tipo de columna a DateTime para incluir fecha y hora
+    hora_inicio = Column(DateTime)  # Nueva columna para la hora de inicio
+    hora_termino = Column(DateTime)  # Nueva columna para la hora de término
     via_contacto = Column(String(length=20))
     objetivo = Column(String(length=150))
     observacion_inicio = Column(String(length=300))

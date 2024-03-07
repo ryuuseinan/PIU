@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PIU.Models;
 
@@ -10,9 +9,11 @@ public partial class Sesion
 
     public int? EstudianteId { get; set; }
 
-    public DateTime? FechaInicio { get; set; }
+    public DateTime? Fecha { get; set; }
 
-    public DateTime? FechaTermino { get; set; }
+    public DateTime? HoraInicio { get; set; }
+
+    public DateTime? HoraTermino { get; set; }
 
     public string? ViaContacto { get; set; }
 

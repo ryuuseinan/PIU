@@ -134,3 +134,7 @@ th {
     font-weight: bold;
     background-color: rgba(0,0,0,0.05)
 }
+
+.no-items{
+    font-style:italic;
+}

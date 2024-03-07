@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Editar sesión";
 }
+@{
+    var EstudianteId = Context.Session.GetInt32("EstudianteId");
+    var EstudianteNombre = Context.Session.GetString("EstudianteNombre");
+}
 <div class="card">
     <div class="card-body">
         <div class="row">
@@ -21,16 +25,22 @@
         <form asp-action="Edit" asp-controller="Sesions" method="post">
             <div class="row">
                 <div class="col-md-1"></div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <p>
-                        <strong>Fecha de inicio</strong><br>
-                        <input type="datetime-local" name="FechaInicio" value="@Model.FechaInicio?.ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+                        <strong>Fecha</strong><br>
+                        <input type="date" name="Fecha" value="@Model.Fecha?.ToString("yyyy-MM-dd")" class="form-control" />
                     </p>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <p>
-                        <strong>Fecha de fin</strong><br>
-                        <input type="datetime-local" name="FechaInicio" value="@Model.FechaTermino?.ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+                        <strong>Desde</strong><br>
+                        <input type="time" name="HoraInicio" value="@Model.HoraInicio?.ToString("HH:mm")" class="form-control" />
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <p>
+                        <strong>Hasta</strong><br>
+                        <input type="time" name="HoraTermino" value="@Model.HoraTermino?.ToString("HH:mm")" class="form-control" />
                     </p>
                 </div>
                 <div class="col-md-2">
@@ -42,16 +52,24 @@
                 </div>
                 <div class="col-md-2">
                     <p>
-                        <strong>Asistencia</strong>
-                        <div class="form-check">
-                            <input type="checkbox" name="Asistio" @if (Model.Asistio == true)
-                            {
-                                <text>checked</text>
-                            } id="asistio" class="form-check-input" />
-                            <label for="asistio" class="form-check-label custom-checkbox">
-                                <span class="checkmark"></span> <!-- Este span será el marcador de verificación -->
-                            </label>
-                        </div>
+                        <strong>Presente</strong>
+                        <style>
+
+                        </style>
+                        @if (Model.Asistio == false)
+                        {
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="Asistio" value="true">
+                                <label class="form-check-label"></label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="Asistio" value="true" checked>
+                                <label class="form-check-label"></label>
+                            </div>
+                        }
 
                         <style>
                             /* Estilo para cuando el checkbox está marcado */

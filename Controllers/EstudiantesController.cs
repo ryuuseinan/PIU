@@ -33,18 +33,20 @@ namespace PIU.Controllers
             return View(await piuContext.ToListAsync());
         }
         [HttpPost]
-        public async Task<IActionResult> Agendar(int estudianteId, string estudianteNombre, string estudianteApellidoPaterno, string estudianteApellidoMaterno)
+        public IActionResult Agendar(int estudianteId, string estudianteNombre, string estudianteApellidoPaterno, string estudianteApellidoMaterno, string estudianteRut)
         {
             if (ModelState.IsValid)
             {
                 HttpContext.Session.SetInt32("EstudianteId", estudianteId);
                 string nombreCompleto = $"{estudianteNombre} {estudianteApellidoPaterno} {estudianteApellidoMaterno}";
                 HttpContext.Session.SetString("EstudianteNombre", nombreCompleto);
+                HttpContext.Session.SetString("EstudianteRut", estudianteRut);
                 return RedirectToAction("Create", "Sesions");
             }
             // En este punto, puedes manejar el caso en el que el modelo no sea válido, por ejemplo, mostrando un mensaje de error.
             return View("Index");
         }
+
 
         // POST: Estudiantes/Search
         [HttpPost]

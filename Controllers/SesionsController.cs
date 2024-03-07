@@ -50,20 +50,10 @@ namespace PIU.Controllers
             // Recuperar el EstudianteId de la sesión
             var EstudianteId = HttpContext.Session.GetInt32("EstudianteId");
             var EstudianteNombre = HttpContext.Session.GetString("EstudianteNombre");
+            var EstudianteRut = HttpContext.Session.GetString("EstudianteRut");
             // Verificar si el EstudianteId es nulo
             if (EstudianteId.HasValue)
             {
-                // Hacer lo que necesites con el EstudianteId, por ejemplo, pasarle a la vista si es necesario
-                ViewBag.EstudianteId = EstudianteId.Value;
-                // pasar el valor EstudianteNombre a la vista
-                ViewBag.EstudianteNombre = EstudianteNombre;
-
-                // También podrías pasar el EstudianteId a través del modelo si lo prefieres
-                // var model = new TuModelo();
-                // model.EstudianteId = EstudianteId.Value;
-                // return View(model);
-
-                // Luego, retornar la vista
                 return View();
             }
             else
@@ -81,15 +71,17 @@ namespace PIU.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EstudianteId,FechaInicio,FechaTermino,ViaContacto,Objetivo,ObservacionInicio,ObservacionDesarrollo,ObservacionCierre,AccionInicio,AccionDesarrollo,AccionCierre,Asistio")] Sesion sesion)
+        public async Task<IActionResult> Create(Sesion sesion)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(sesion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();  
+                return RedirectToAction("Details", "Sesions", new { id = sesion.Id });
+                //return RedirectToAction(nameof(Index));
             }
             ViewData["EstudianteId"] = new SelectList(_context.Estudiantes, "Id", "Id", sesion.EstudianteId);
+            // redireccionar a estudiantes details
             return View(sesion);
         }
 
@@ -130,6 +122,14 @@ namespace PIU.Controllers
                 // Verificar el valor del checkbox de asistencia
                 try
                 {
+                    if (Request.Form["Asistio"] == "true")
+                    {
+                        sesion.Asistio = true;
+                    }
+                    else
+                    {
+                        sesion.Asistio = false;
+                    }
                     _context.Update(sesion);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", "Sesions", new { id = sesion.Id });
@@ -145,7 +145,6 @@ namespace PIU.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["EstudianteId"] = new SelectList(_context.Estudiantes, "Id", "Id", sesion.EstudianteId);
             return View(sesion);

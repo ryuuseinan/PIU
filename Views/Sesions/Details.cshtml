@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Detalles de la sesión";
 }
+@{
+    var EstudianteId = Context.Session.GetInt32("EstudianteId");
+    var EstudianteNombre = Context.Session.GetString("EstudianteNombre");
+}
 <div class="card">
     <div class="card-body">
         <div class="row">
@@ -29,7 +33,7 @@
             <div class="col-md-1">
                 <p>
                     <strong>Estado</strong><br>
-                    @if (Model.FechaInicio >= DateTime.Now)
+                    @if (Model.Fecha >= DateTime.Now)
                     {
                         <span class="badge badge-danger">Pendiente</span>
                     }
@@ -41,25 +45,35 @@
             </div>
             <div class="col-md-3">
                 <p>
-                    <strong>Fecha de la sesión</strong><br>
+                    <strong>Fecha y hora</strong><br>
                     <span class="badge badge-dark">
                         <i class="fas fa-calendar"></i>
-                        @Model.FechaInicio?.ToString("dd/MM/yyyy")
+                        @Model.Fecha?.ToString("dd/MM/yyyy")
                     </span>
                     <span class="badge badge-dark">
                         <i class="fas fa-clock"></i>
-                        @Model.FechaInicio?.ToString("HH:mm")~@Model.FechaTermino?.ToString("HH:mm")
+                        @if (Model.HoraInicio.HasValue)
+                        {
+                            <span>
+                                @Model.HoraInicio?.ToString("HH:mm")
+                            </span>
+                        }
+                        @if (Model.HoraTermino.HasValue)
+                        {
+                            <span>
+                                ~ @Model.HoraTermino?.ToString("HH:mm")
+                            </span>
+                        }
                     </span>
                 </p>
             </div>
-
             <div class="col-md-2">
                 <p>
                     <strong>Duración</strong><br>
                     <span class="badge badge-dark">
                         <i class="fas fa-clock"></i>
                         @{
-                            TimeSpan duracion = (Model.FechaTermino - Model.FechaInicio) ?? TimeSpan.Zero;
+                            TimeSpan duracion = (Model.HoraTermino - Model.HoraInicio) ?? TimeSpan.Zero;
                             string duracionFormateada = $"{(int)duracion.Minutes} minutos";
                         }
                         @duracionFormateada
